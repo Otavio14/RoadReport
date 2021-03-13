@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/editNome"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/styles"
+        android:ems="10"
+        android:hint="Nome Completo"
+        android:inputType="textPersonName"
+        android:textSize="20dp"
+        tools:layout_editor_absoluteX="80dp"
+        tools:layout_editor_absoluteY="207dp" />
+
+    <EditText
+        android:id="@+id/editCpf"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/styles"
+        android:ems="10"
+        android:hint="CPF"
+        android:inputType="number"
+        android:textSize="20dp"
+        tools:layout_editor_absoluteX="80dp"
+        tools:layout_editor_absoluteY="280dp" />
+
+    <EditText
+        android:id="@+id/editTelefone"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/styles"
+        android:ems="10"
+        android:hint="Telefone"
+        android:inputType="phone"
+        android:textSize="20dp"
+        tools:layout_editor_absoluteX="80dp"
+        tools:layout_editor_absoluteY="354dp" />
+
+    <EditText
+        android:id="@+id/editSenha"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/styles"
+        android:ems="10"
+        android:hint="Email"
+        android:inputType="textPassword"
+        android:textSize="20dp"
+        tools:layout_editor_absoluteX="80dp"
+        tools:layout_editor_absoluteY="426dp" />
+
+    <EditText
+        android:id="@+id/editEmail"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/styles"
+        android:ems="10"
+        android:hint="Senha"
+        android:inputType="textEmailAddress"
+        android:textSize="20dp"
+        tools:layout_editor_absoluteX="80dp"
+        tools:layout_editor_absoluteY="497dp" />
+
+    <Button
+        android:id="@+id/buttonCadastrar"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_borders"
+        android:text="Cadastrar"
+        android:textSize="15dp"
+        tools:layout_editor_absoluteX="80dp"
+        tools:layout_editor_absoluteY="578dp" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

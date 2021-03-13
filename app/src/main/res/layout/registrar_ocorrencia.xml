@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/editRua"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/styles"
+        android:ems="10"
+        android:hint="Rua"
+        android:inputType="text"
+        android:textSize="20dp"
+        tools:layout_editor_absoluteX="80dp"
+        tools:layout_editor_absoluteY="132dp" />
+
+    <TextView
+        android:id="@+id/textRegistrarOcorrencia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Registrar Ocorrência"
+        android:textColor="@color/orange"
+        android:textSize="25dp"
+        tools:layout_editor_absoluteX="91dp"
+        tools:layout_editor_absoluteY="82dp" />
+
+    <EditText
+        android:id="@+id/editBairro"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/styles"
+        android:ems="10"
+        android:hint="Bairro"
+        android:inputType="text"
+        android:textSize="20dp"
+        tools:layout_editor_absoluteX="80dp"
+        tools:layout_editor_absoluteY="183dp" />
+
+    <EditText
+        android:id="@+id/editReferencia"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/styles"
+        android:ems="10"
+        android:hint="Referência"
+        android:inputType="text"
+        android:textSize="20dp"
+        tools:layout_editor_absoluteX="80dp"
+        tools:layout_editor_absoluteY="239dp" />
+
+    <EditText
+        android:id="@+id/editDescricao"
+        android:layout_width="250dp"
+        android:layout_height="200dp"
+        android:background="@drawable/styles2"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="Descrição"
+        android:inputType="textMultiLine"
+        android:textSize="20dp"
+        tools:layout_editor_absoluteX="80dp"
+        tools:layout_editor_absoluteY="297dp" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_borders"
+        android:text="Button"
+        tools:layout_editor_absoluteX="80dp"
+        tools:layout_editor_absoluteY="667dp" />
+
+    <ImageButton
+        android:id="@+id/imageButton2"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/ic_photo"
+        tools:layout_editor_absoluteX="143dp"
+        tools:layout_editor_absoluteY="523dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
