@@ -7,5 +7,6 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- Cor laranja padrão do projeto -->
     <color name="orange">#f27443</color>
 </resources>
