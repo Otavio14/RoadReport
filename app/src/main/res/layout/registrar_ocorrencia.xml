@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Layout referente à tela de resitro de ocorrências -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -16,7 +17,7 @@
         android:inputType="text"
         android:textSize="20dp"
         tools:layout_editor_absoluteX="80dp"
-        tools:layout_editor_absoluteY="132dp" />
+        tools:layout_editor_absoluteY="149dp" />
 
     <TextView
         android:id="@+id/textRegistrarOcorrencia"
@@ -26,7 +27,7 @@
         android:textColor="@color/orange"
         android:textSize="25dp"
         tools:layout_editor_absoluteX="91dp"
-        tools:layout_editor_absoluteY="82dp" />
+        tools:layout_editor_absoluteY="95dp" />
 
     <EditText
         android:id="@+id/editBairro"
@@ -38,7 +39,7 @@
         android:inputType="text"
         android:textSize="20dp"
         tools:layout_editor_absoluteX="80dp"
-        tools:layout_editor_absoluteY="183dp" />
+        tools:layout_editor_absoluteY="203dp" />
 
     <EditText
         android:id="@+id/editReferencia"
@@ -50,7 +51,7 @@
         android:inputType="text"
         android:textSize="20dp"
         tools:layout_editor_absoluteX="80dp"
-        tools:layout_editor_absoluteY="239dp" />
+        tools:layout_editor_absoluteY="259dp" />
 
     <EditText
         android:id="@+id/editDescricao"
@@ -63,7 +64,7 @@
         android:inputType="textMultiLine"
         android:textSize="20dp"
         tools:layout_editor_absoluteX="80dp"
-        tools:layout_editor_absoluteY="297dp" />
+        tools:layout_editor_absoluteY="313dp" />
 
     <Button
         android:id="@+id/button2"
@@ -81,5 +82,16 @@
         android:scaleType="fitXY"
         app:srcCompat="@drawable/ic_photo"
         tools:layout_editor_absoluteX="143dp"
-        tools:layout_editor_absoluteY="523dp" />
+        tools:layout_editor_absoluteY="525dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="RoadReport"
+        android:textColor="@color/orange"
+        android:textSize="40dp"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="99dp"
+        tools:layout_editor_absoluteY="29dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
