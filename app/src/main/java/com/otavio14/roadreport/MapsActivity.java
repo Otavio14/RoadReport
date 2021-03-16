@@ -3,6 +3,8 @@ package com.otavio14.roadreport;
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;

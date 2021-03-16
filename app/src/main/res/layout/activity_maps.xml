@@ -14,13 +14,110 @@
     <TextView
         android:id="@+id/textView"
         android:layout_width="250dp"
-        android:layout_height="30dp"
-        android:background="@color/orange"
+        android:layout_height="50dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/rounded_borders"
         android:gravity="center"
         android:text="Mapa de Ocorrências"
         android:textColor="@color/white"
-        android:textSize="25dp"
-        tools:layout_editor_absoluteX="50dp"
-        tools:layout_editor_absoluteY="526dp" />
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/menu_fechado"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="24dp"
+        android:clickable="true"
+        app:backgroundTint="@color/orange"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="40dp"
+        app:srcCompat="@drawable/ic_menu_fechado"
+        app:tint="@color/white" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/sair"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/gray"
+        android:clickable="true"
+        android:text="Sair"
+        android:textColor="@color/white"
+        app:icon="@drawable/ic_logout"
+        app:iconTint="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/menu_fechado"
+        app:layout_constraintEnd_toEndOf="@+id/menu_fechado" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/ver_relatorios"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/gray"
+        android:clickable="true"
+        android:text="Ver Relatórios"
+        android:textColor="@color/white"
+        app:icon="@drawable/ic_relatorio"
+        app:iconTint="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/sair"
+        app:layout_constraintEnd_toEndOf="@+id/sair" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/relatar_ocorrencia"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/gray"
+        android:clickable="true"
+        android:text="Relatar Ocorrência"
+        android:textColor="@color/white"
+        app:icon="@drawable/ic_relatar"
+        app:iconTint="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/ver_relatorios"
+        app:layout_constraintEnd_toEndOf="@+id/ver_relatorios" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/nome_usuario"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/gray"
+        android:clickable="true"
+        android:text="Nome do Usuário"
+        android:textColor="@color/white"
+        app:icon="@drawable/ic_usuario"
+        app:iconTint="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/relatar_ocorrencia"
+        app:layout_constraintEnd_toEndOf="@+id/relatar_ocorrencia" />
+
+    <TextView
+        android:id="@+id/textLocalizacao"
+        android:layout_width="350dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:textSize="15dp"
+        android:background="@drawable/rounded_borders"
+        android:drawableLeft="@drawable/ic_marker"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:text="Av. Eng. Fábio Barnabé\nIndaiatuba - SP"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

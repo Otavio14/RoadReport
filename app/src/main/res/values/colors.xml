@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     <!-- Cor laranja padrão do projeto -->
     <color name="orange">#f27443</color>
+    <!-- Cor cinza padrão do projeto -->
+    <color name="gray">#494949</color>
 </resources>
