@@ -69,9 +69,10 @@
     <Button
         android:id="@+id/button2"
         android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_borders"
-        android:text="Button"
+        android:layout_height="60dp"
+        android:backgroundTint="@color/orange"
+        android:text="Registrar"
+        app:cornerRadius="24dp"
         tools:layout_editor_absoluteX="80dp"
         tools:layout_editor_absoluteY="667dp" />
 

@@ -2,6 +2,7 @@
 <!-- Layout referente à tela de cadastro -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -69,10 +70,11 @@
     <Button
         android:id="@+id/buttonCadastrar"
         android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_borders"
+        android:layout_height="60dp"
+        android:backgroundTint="@color/orange"
         android:text="Cadastrar"
         android:textSize="15dp"
+        app:cornerRadius="24dp"
         tools:layout_editor_absoluteX="80dp"
         tools:layout_editor_absoluteY="585dp" />
 

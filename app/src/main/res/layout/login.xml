@@ -2,6 +2,7 @@
 <!-- Layout referente à tela de login -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -33,9 +34,10 @@
     <Button
         android:id="@+id/button"
         android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_borders"
+        android:layout_height="60dp"
         android:text="Logar"
+        app:cornerRadius="24dp"
+        android:backgroundTint="@color/orange"
         tools:layout_editor_absoluteX="80dp"
         tools:layout_editor_absoluteY="532dp" />
 
