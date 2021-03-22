@@ -11,4 +11,10 @@
     <color name="orange">#f27443</color>
     <!-- Cor cinza padrão do projeto -->
     <color name="gray">#494949</color>
+    <!-- Cor vermelho padrão do projeto -->
+    <color name="red">#bf1b1b</color>
+    <!-- Cor amarelo padrão do projeto -->
+    <color name="yellow">#d1ce2e</color>
+    <!-- Cor verde padrão do projeto -->
+    <color name="green">#1e9c22</color>
 </resources>
