@@ -22,7 +22,7 @@
         android:gravity="center"
         android:text="Mapa de Ocorrências"
         android:textColor="@color/white"
-        android:textSize="20dp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -98,7 +98,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
         app:backgroundTint="@color/gray"
-        android:clickable="true"
+        android:clickable="false"
         android:visibility="invisible"
         android:text="Nome do Usuário"
         android:textColor="@color/white"
@@ -112,7 +112,7 @@
         android:layout_width="350dp"
         android:layout_height="60dp"
         android:layout_marginTop="16dp"
-        android:textSize="15dp"
+        android:textSize="15sp"
         android:background="@drawable/rounded_borders"
         android:drawableLeft="@drawable/ic_marker"
         android:drawablePadding="10dp"
@@ -122,6 +122,7 @@
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:drawableStart="@drawable/ic_marker" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

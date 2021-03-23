@@ -5,58 +5,118 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!--Base CardView-->
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewOcorrencias"
-        style="@style/CardView.Light"
+        android:id="@+id/base_cardview"
+        style="@style/Base.CardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <!--This is a ConstraintLayout for the entire CardView
+                   including the expandable portion-->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/base_cardview"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/textRua"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Av. Eng. Fábio Roberto Barnabé"
-                android:textColor="@color/orange"
-                android:textSize="20dp"
+            <!--This is a ConstraintLayout for the fixed portion
+                of the CardView. The elements
+                that lie within the fixed portion of the CardView
+                can be constrained to this layout.-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/fixed_layout"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0">
 
-            <TextView
-                android:id="@+id/textBairro"
-                android:layout_width="wrap_content"
+                <!--This is ImageButton for the expansion icon.-->
+                <TextView
+                    android:id="@+id/filtros"
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:clickable="true"
+                    android:drawableRight="@drawable/ic_expand_more"
+                    android:drawablePadding="20dp"
+                    android:text="Filtros"
+                    android:textColor="@color/orange"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/fixed_layout"
+                    app:layout_constraintEnd_toEndOf="@+id/fixed_layout"
+                    app:layout_constraintStart_toStartOf="@+id/fixed_layout"
+                    app:layout_constraintTop_toTopOf="@+id/fixed_layout"
+                    android:drawableEnd="@drawable/ic_expand_more"
+                    android:focusable="true" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!--The following is the expandable portion whose
+                visibility is initially set to 'gone'.
+                The parent LinearLayout contains 3 child LinearLayouts
+                that hold a subject name and an icon each.-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/hidden_view"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Jardim Regina"
-                android:textSize="18dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:layout_marginTop="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textRua" />
+                app:layout_constraintTop_toBottomOf="@+id/fixed_layout">
 
-            <Spinner
-                android:id="@+id/spinnerStatus"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textBairro" />
+                <TextView
+                    android:id="@+id/filtroData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_seta_up_down"
+                    android:drawablePadding="10dp"
+                    android:drawableTint="@color/orange"
+                    android:text="Data"
+                    android:textColor="@color/orange"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:drawableEnd="@drawable/ic_seta_up_down" />
 
-            <Button
-                android:id="@+id/buttonMostrarMais"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:layout_constraintRight_toRightOf="parent"
-                android:background="@drawable/ic_expand_more"
-                app:backgroundTint="@color/orange"
-                app:layout_constraintTop_toBottomOf="@+id/textBairro"
-                tools:layout_editor_absoluteX="200dp" />
+                <TextView
+                    android:id="@+id/filtroStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_status"
+                    android:drawableTint="@color/orange"
+                    android:text="Status"
+                    android:textColor="@color/orange"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:drawableEnd="@drawable/ic_status" />
 
+                <TextView
+                    android:id="@+id/filtroOrdem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_seta_up_down"
+                    android:text="Ordem"
+                    android:drawableTint="@color/orange"
+                    android:textColor="@color/orange"
+                    android:textSize="18sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:drawableEnd="@drawable/ic_seta_up_down" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
