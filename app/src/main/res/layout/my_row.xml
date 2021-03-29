@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--Base CardView-->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/base_cardview"
+        style="@style/Base.CardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!--This is a ConstraintLayout for the entire CardView
+                   including the expandable portion-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/base_cardview"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <!--This is a ConstraintLayout for the fixed portion
+                of the CardView. The elements
+                that lie within the fixed portion of the CardView
+                can be constrained to this layout.-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/fixed_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0">
+
+                <TextView
+                    android:id="@+id/textNomeRua"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="Parque Ecológico"
+                    android:textColor="@color/orange"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textNomeBairro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Jardim Regina"
+                    android:textColor="@color/orange"
+                    app:layout_constraintStart_toStartOf="@+id/textNomeRua"
+                    app:layout_constraintTop_toBottomOf="@+id/textNomeRua" />
+
+                <TextView
+                    android:id="@+id/textReferencia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Referência"
+                    android:textColor="@color/orange"
+                    app:layout_constraintStart_toStartOf="@+id/textNomeBairro"
+                    app:layout_constraintTop_toBottomOf="@+id/textNomeBairro" />
+
+                <!--This is ImageButton for the expansion icon.-->
+                <Button
+                    android:id="@+id/buttonExpandir"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    app:backgroundTint="@color/orange"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/ic_expand_more"
+                    app:layout_constraintBottom_toBottomOf="@+id/textReferencia"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!--The following is the expandable portion whose
+                visibility is initially set to 'gone'.
+                The parent LinearLayout contains 3 child LinearLayouts
+                that hold a subject name and an icon each.-->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/hidden_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fixed_layout">
+
+                <TextView
+                    android:id="@+id/textDataInicio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="Data Início"
+                    android:textColor="@color/orange"
+                    app:layout_constraintEnd_toEndOf="@+id/textDataInicioValor"
+                    app:layout_constraintStart_toStartOf="@+id/textDataInicioValor"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textDataFim"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Data Fim"
+                    android:textColor="@color/orange"
+                    app:layout_constraintEnd_toEndOf="@+id/textDataFimValor"
+                    app:layout_constraintStart_toStartOf="@+id/textDataFimValor"
+                    app:layout_constraintTop_toTopOf="@+id/textDataInicio" />
+
+                <ImageView
+                    android:id="@+id/textFotoAntes"
+                    android:layout_width="180dp"
+                    android:layout_height="150dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/styles2"
+                    android:gravity="center"
+                    app:srcCompat="@drawable/ic_status_espera"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textDataInicioValor" />
+
+                <ImageView
+                    android:id="@+id/textFotoDepois"
+                    android:layout_width="180dp"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@drawable/styles2"
+                    app:srcCompat="@drawable/ic_status_espera"
+                    android:gravity="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textDataFimValor" />
+
+                <TextView
+                    android:id="@+id/textDataInicioValor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="13/01/2021"
+                    android:textColor="@color/orange"
+                    app:layout_constraintEnd_toEndOf="@+id/textFotoAntes"
+                    app:layout_constraintStart_toStartOf="@+id/textFotoAntes"
+                    app:layout_constraintTop_toBottomOf="@+id/textDataInicio" />
+
+                <TextView
+                    android:id="@+id/textDataFimValor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="20/01/2021"
+                    android:textColor="@color/orange"
+                    app:layout_constraintEnd_toEndOf="@+id/textFotoDepois"
+                    app:layout_constraintStart_toStartOf="@+id/textFotoDepois"
+                    app:layout_constraintTop_toBottomOf="@+id/textDataFim" />
+
+                <EditText
+                    android:id="@+id/textDescricao"
+                    android:layout_width="400dp"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/styles2"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:inputType="textMultiLine"
+                    android:longClickable="false"
+                    android:text="Descrição"
+                    android:textColor="@color/orange"
+                    app:layout_constraintEnd_toEndOf="@+id/textFotoDepois"
+                    app:layout_constraintHorizontal_bias="0.523"
+                    app:layout_constraintStart_toStartOf="@+id/textFotoAntes"
+                    app:layout_constraintTop_toBottomOf="@+id/textFotoAntes" />
+
+                <TextView
+                    android:id="@+id/textResponsavel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Nome do Responsável"
+                    android:textColor="@color/orange"
+                    app:layout_constraintEnd_toEndOf="@+id/textDescricao"
+                    app:layout_constraintStart_toStartOf="@+id/textDescricao"
+                    app:layout_constraintTop_toBottomOf="@+id/textDescricao" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

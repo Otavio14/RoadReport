@@ -12,15 +12,35 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.transition.AutoTransition;
 import android.transition.TransitionManager;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class OcorrenciasActivity extends AppCompatActivity {
 
     TextView botaoExpandir;
     ConstraintLayout hiddenView;
     CardView cardView;
+
+    RecyclerView recyclerView;
+
+    ArrayList<String> nomeRua = new ArrayList<>(Arrays.asList("Nome Rua 1", "Nome Rua 2", "Nome Rua 3"));
+    ArrayList<String> nomeBairro = new ArrayList<>(Arrays.asList("Nome Bairro 1", "Nome Bairro 2", "Nome Bairro 3"));
+    ArrayList<String> referencia = new ArrayList<>(Arrays.asList("Referência 1", "Referência 2", "Referência  3"));
+    ArrayList<String> textoStatus = new ArrayList<>(Arrays.asList("Em espera", "Em andamento", "Concluído"));
+    ArrayList<Integer> iconeStatus = new ArrayList<>(Arrays.asList(R.drawable.ic_status_espera, R.drawable.ic_status_andamento, R.drawable.ic_status_concluido));
+    ArrayList<String> dataInicio = new ArrayList<>(Arrays.asList("Data Início 1", "Data Início 2", "Data Início 3"));
+    ArrayList<String> dataFim = new ArrayList<>(Arrays.asList("Data Fim 1", "Data Fim 2", "Data Fim 3"));
+    ArrayList<Integer> fotoAntes = new ArrayList<>(Arrays.asList(R.drawable.ic_status_espera, R.drawable.ic_status_andamento, R.drawable.ic_status_concluido));
+    ArrayList<Integer> fotoDepois = new ArrayList<>(Arrays.asList(R.drawable.ic_status_espera, R.drawable.ic_status_andamento, R.drawable.ic_status_concluido));
+    ArrayList<String> descricao = new ArrayList<>(Arrays.asList("Descrição 1", "Descrição 2", "Descrição 3"));
+    ArrayList<String> nomeResponsavel = new ArrayList<>(Arrays.asList("Nome Responsável 1", "Nome Responsável 2", "Nome Responsável 3"));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +54,12 @@ public class OcorrenciasActivity extends AppCompatActivity {
         hiddenView = findViewById(R.id.hidden_view);
         Drawable ic_expandir = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expand_more, null);
         Drawable ic_recolher = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expand_less, null);
+
+        recyclerView = findViewById(R.id.recyclerView);
+
+        MyAdapter myAdapter = new MyAdapter(this,nomeRua,nomeBairro,referencia,textoStatus,iconeStatus,dataInicio,dataFim,fotoAntes,fotoDepois,descricao,nomeResponsavel);
+        recyclerView.setAdapter(myAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         botaoExpandir.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)

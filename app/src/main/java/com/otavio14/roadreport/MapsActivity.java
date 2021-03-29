@@ -27,7 +27,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     ExtendedFloatingActionButton efabSair, efabVerOcorrencias, efabRelatarOcorrencia, efabNomeUsuario;
     FloatingActionButton fabMenuFechado;
     boolean menuStatus = false;
-    Button buttonVerMais;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +42,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         efabSair = (ExtendedFloatingActionButton) findViewById(R.id.sair);
         efabRelatarOcorrencia = (ExtendedFloatingActionButton) findViewById(R.id.relatar_ocorrencia);
         efabNomeUsuario = (ExtendedFloatingActionButton) findViewById(R.id.nome_usuario);
-        buttonVerMais = (Button) findViewById(R.id.ver_ocorrencias);
 
         fabMenuFechado.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,10 +63,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     efabVerOcorrencias.show();
                     efabNomeUsuario.show();
                     menuStatus = true;
-                    buttonVerMais.setOnClickListener(new View.OnClickListener() {
+                    efabVerOcorrencias.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            //Inicia a atividade de ocorrências
                             Intent intent = new Intent(MapsActivity.this, OcorrenciasActivity.class);
                             startActivity(intent);
                         }

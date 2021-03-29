@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <!--Base CardView-->
     <androidx.cardview.widget.CardView
@@ -44,8 +44,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="28dp"
                     android:clickable="true"
+                    android:drawableEnd="@drawable/ic_expand_more"
                     android:drawableRight="@drawable/ic_expand_more"
                     android:drawablePadding="20dp"
+                    android:focusable="true"
                     android:text="Filtros"
                     android:textColor="@color/orange"
                     android:textSize="20sp"
@@ -53,9 +55,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/fixed_layout"
                     app:layout_constraintEnd_toEndOf="@+id/fixed_layout"
                     app:layout_constraintStart_toStartOf="@+id/fixed_layout"
-                    app:layout_constraintTop_toTopOf="@+id/fixed_layout"
-                    android:drawableEnd="@drawable/ic_expand_more"
-                    android:focusable="true" />
+                    app:layout_constraintTop_toTopOf="@+id/fixed_layout" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -67,9 +67,9 @@
                 android:id="@+id/hidden_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 android:visibility="gone"
-                android:layout_marginTop="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -79,44 +79,60 @@
                     android:id="@+id/filtroData"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp"
+                    android:clickable="true"
+                    android:drawableEnd="@drawable/ic_seta_up_down"
                     android:drawableRight="@drawable/ic_seta_up_down"
                     android:drawablePadding="10dp"
                     android:drawableTint="@color/orange"
+                    android:focusable="true"
                     android:text="Data"
                     android:textColor="@color/orange"
                     android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:drawableEnd="@drawable/ic_seta_up_down" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/filtroStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableRight="@drawable/ic_status"
+                    android:clickable="true"
+                    android:drawableEnd="@drawable/ic_status_espera"
+                    android:drawableRight="@drawable/ic_status_espera"
+                    android:drawablePadding="10dp"
                     android:drawableTint="@color/orange"
+                    android:focusable="true"
                     android:text="Status"
                     android:textColor="@color/orange"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:drawableEnd="@drawable/ic_status" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/filtroOrdem"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="32dp"
+                    android:clickable="true"
+                    android:drawableEnd="@drawable/ic_seta_up_down"
                     android:drawableRight="@drawable/ic_seta_up_down"
-                    android:text="Ordem"
+                    android:drawablePadding="10dp"
                     android:drawableTint="@color/orange"
+                    android:focusable="true"
+                    android:text="Ordem"
                     android:textColor="@color/orange"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:drawableEnd="@drawable/ic_seta_up_down" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/base_cardview" />
 </androidx.constraintlayout.widget.ConstraintLayout>
