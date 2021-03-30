@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content">
 
     <!--Base CardView-->
     <androidx.cardview.widget.CardView
-        android:id="@+id/base_cardview"
+        android:id="@+id/base_cardview_ocorrencias"
         style="@style/Base.CardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/base_cardview"
+            app:layout_constraintBottom_toBottomOf="@+id/base_cardview_ocorrencias"
             app:layout_constraintTop_toTopOf="parent">
 
             <!--This is a ConstraintLayout for the fixed portion
@@ -27,7 +27,7 @@
                 that lie within the fixed portion of the CardView
                 can be constrained to this layout.-->
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/fixed_layout"
+                android:id="@+id/fixed_layout_ocorrencias"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -70,15 +70,23 @@
                     app:layout_constraintStart_toStartOf="@+id/textNomeBairro"
                     app:layout_constraintTop_toBottomOf="@+id/textNomeBairro" />
 
+                <Spinner
+                    android:id="@+id/spinnerStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="16dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/textNomeRua" />
+
                 <!--This is ImageButton for the expansion icon.-->
                 <Button
-                    android:id="@+id/buttonExpandir"
+                    android:id="@+id/buttonExpandirOcorrencias"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    app:backgroundTint="@color/orange"
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
                     android:background="@drawable/ic_expand_more"
+                    app:backgroundTint="@color/orange"
                     app:layout_constraintBottom_toBottomOf="@+id/textReferencia"
                     app:layout_constraintEnd_toEndOf="parent" />
 
@@ -89,16 +97,16 @@
                 The parent LinearLayout contains 3 child LinearLayouts
                 that hold a subject name and an icon each.-->
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/hidden_view"
+                android:id="@+id/hidden_view_ocorrencias"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fixed_layout">
+                app:layout_constraintTop_toBottomOf="@+id/fixed_layout_ocorrencias">
 
                 <TextView
                     android:id="@+id/textDataInicio"
@@ -130,9 +138,9 @@
                     android:layout_marginTop="8dp"
                     android:background="@drawable/styles2"
                     android:gravity="center"
-                    app:srcCompat="@drawable/ic_status_espera"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textDataInicioValor" />
+                    app:layout_constraintTop_toBottomOf="@+id/textDataInicioValor"
+                    app:srcCompat="@drawable/ic_status_espera" />
 
                 <ImageView
                     android:id="@+id/textFotoDepois"
@@ -142,10 +150,10 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
                     android:background="@drawable/styles2"
-                    app:srcCompat="@drawable/ic_status_espera"
                     android:gravity="center"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textDataFimValor" />
+                    app:layout_constraintTop_toBottomOf="@+id/textDataFimValor"
+                    app:srcCompat="@drawable/ic_status_espera" />
 
                 <TextView
                     android:id="@+id/textDataInicioValor"
