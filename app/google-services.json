@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "132350064679",
+    "project_id": "roadreport-aed8a",
+    "storage_bucket": "roadreport-aed8a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:132350064679:android:64c19217f7fab0d59b3602",
+        "android_client_info": {
+          "package_name": "com.otavio14.roadreport"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "132350064679-0mobr4go0vpgnjd72o01qhubai0ek05c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOwfKgE0OfpEE6CgWIUAj03yKKbD0c84M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "132350064679-0mobr4go0vpgnjd72o01qhubai0ek05c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
