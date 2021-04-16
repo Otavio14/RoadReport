@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Layout referente à tela de login -->
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/editTextTextEmailAddress2"
+        android:id="@+id/editEmailLogin"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="128dp"
@@ -17,12 +16,14 @@
         android:hint="Email"
         android:inputType="textEmailAddress"
         android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/editSenhaLogin"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <EditText
-        android:id="@+id/editTextTextPassword2"
+        android:id="@+id/editSenhaLogin"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
@@ -31,9 +32,11 @@
         android:hint="Senha"
         android:inputType="textPassword"
         android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonLogar"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress2" />
+        app:layout_constraintTop_toBottomOf="@+id/editEmailLogin" />
 
     <Button
         android:id="@+id/buttonLogar"
@@ -43,32 +46,38 @@
         android:backgroundTint="@color/orange"
         android:text="Logar"
         app:cornerRadius="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonCadastro"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword2" />
+        app:layout_constraintTop_toBottomOf="@+id/editSenhaLogin" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="128dp"
+        android:layout_marginTop="64dp"
         android:text="RoadReport"
         android:textColor="@color/orange"
         android:textSize="40dp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/editEmailLogin"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textRealizarCadastro"
+    <Button
+        android:id="@+id/buttonCadastro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:clickable="true"
-        android:text="Clique aqui para realizar cadastro"
+        android:background="@android:color/transparent"
+        android:text="Realizar cadastro"
         android:textColor="@color/orange"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonLogar" />
 </androidx.constraintlayout.widget.ConstraintLayout>

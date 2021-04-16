@@ -75,6 +75,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
+    //Desabilita o botão voltar
+    @Override
+    public void onBackPressed() {
+
+    }
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
