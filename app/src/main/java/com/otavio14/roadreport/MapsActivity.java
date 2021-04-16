@@ -2,7 +2,9 @@ package com.otavio14.roadreport;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,16 +39,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        fabMenuFechado = (FloatingActionButton) findViewById(R.id.menu_fechado);
-        efabVerOcorrencias = (ExtendedFloatingActionButton) findViewById(R.id.ver_ocorrencias);
-        efabSair = (ExtendedFloatingActionButton) findViewById(R.id.sair);
-        efabRelatarOcorrencia = (ExtendedFloatingActionButton) findViewById(R.id.relatar_ocorrencia);
-        efabNomeUsuario = (ExtendedFloatingActionButton) findViewById(R.id.nome_usuario);
+        //Inicia uma sessão de login
+        SharedPreferences sharedPreferences = getSharedPreferences("shared_preferences", Context.MODE_PRIVATE);
+
+        fabMenuFechado = findViewById(R.id.menu_fechado);
+        efabVerOcorrencias = findViewById(R.id.ver_ocorrencias);
+        efabSair = findViewById(R.id.sair);
+        efabRelatarOcorrencia = findViewById(R.id.relatar_ocorrencia);
+        efabNomeUsuario = findViewById(R.id.nome_usuario);
+
+        //Insere o nome do usuário no menu
+        String nome = sharedPreferences.getString("nome_key","");
+        efabNomeUsuario.setText(nome.split(" ",2)[0]);
 
         fabMenuFechado.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(menuStatus) {
+                    //Oculta o menu
                     fabMenuFechado.setImageResource(R.drawable.ic_menu_fechado);
                     fabMenuFechado.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange)));
                     efabSair.hide();
@@ -56,6 +66,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     menuStatus = false;
                 }
                 else {
+                    //Exibe o menu
                     fabMenuFechado.setImageResource(R.drawable.ic_menu_aberto);
                     fabMenuFechado.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gray)));
                     efabSair.show();
@@ -63,10 +74,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     efabVerOcorrencias.show();
                     efabNomeUsuario.show();
                     menuStatus = true;
+                    //Direciona para a tela de ocorrências
                     efabVerOcorrencias.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(MapsActivity.this, OcorrenciasActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                    //Sair da conta
+                    efabSair.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //Finaliza a sessão
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.clear();
+                            editor.apply();
+                            Intent intent = new Intent(MapsActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                        }
+                    });
+                    //Direciona para a tela de relatar ocorrências
+                    efabRelatarOcorrencia.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(MapsActivity.this, RegistrarOcorrenciaActivity.class);
                             startActivity(intent);
                         }
                     });

@@ -1,6 +1,8 @@
 package com.otavio14.roadreport;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -25,6 +27,9 @@ public class LoginActivity extends AppCompatActivity {
     EditText editEmailLogin, editSenhaLogin;
     Button buttonLogar, buttonCadastro;
 
+    public Boolean administradorCampo = false;
+    public String nomeCampo = null, idUsuario = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +46,18 @@ public class LoginActivity extends AppCompatActivity {
         buttonLogar = findViewById(R.id.buttonLogar);
         buttonCadastro = findViewById(R.id.buttonCadastro);
 
+        //Inicia uma sessão de login
+        SharedPreferences sharedPreferences = getSharedPreferences("shared_preferences",Context.MODE_PRIVATE);
+
+        //Verifica se existe uma conta logada e realiza o login
+        if(sharedPreferences.contains("email_key")
+                && sharedPreferences.contains("senha_key")
+                && sharedPreferences.contains("administrador_key")
+                && sharedPreferences.contains("nome_key")) {
+            Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
+            startActivity(intent);
+        }
+
         buttonCadastro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,22 +72,33 @@ public class LoginActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(editEmailLogin.getText().toString()) || TextUtils.isEmpty(editSenhaLogin.getText().toString())) {
                     Toast.makeText(getApplicationContext(), "Preencha todos os campos", Toast.LENGTH_LONG).show();
                 } else {
+                    //Realiza consulta no banco de dados se existe esse usuário
                     database.collection("usuario")
                             .whereEqualTo("email", editEmailLogin.getText().toString())
                             .whereEqualTo("senha", editSenhaLogin.getText().toString())
                             .get()
                             .addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
+                                    //Recebe os valores do nivel do usuário e nome
+                                    for (DocumentSnapshot document : task.getResult()) {
+                                        administradorCampo = document.getBoolean("administrador");
+                                        nomeCampo = document.getString("nome");
+                                        idUsuario = document.getId();
+                                    }
                                     if (task.getResult().isEmpty()) {
                                         Toast.makeText(getApplicationContext(), "Dados incorretos", Toast.LENGTH_LONG).show();
                                     } else {
+                                        //Insere os dados da sessão
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putString("email_key", editEmailLogin.getText().toString());
+                                        editor.putString("senha_key", editSenhaLogin.getText().toString());
+                                        editor.putBoolean("administrador_key",administradorCampo);
+                                        editor.putString("nome_key", nomeCampo + " ");
+                                        editor.putString("idUsuario_key", idUsuario);
+                                        editor.apply();
                                         Intent intent = new Intent(LoginActivity.this, MapsActivity.class);
                                         startActivity(intent);
                                     }
-
-                                /*for (DocumentSnapshot document : task.getResult()) {
-                                    Log.d(TAG, document.getId() + " => " + document.getData());
-                                }*/
                                 } else {
                                     Log.d("teste", "Error getting documents: ", task.getException());
                                 }

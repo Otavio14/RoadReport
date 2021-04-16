@@ -1,6 +1,8 @@
 package com.otavio14.roadreport;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -59,6 +61,7 @@ public class CadastroActivity extends AppCompatActivity {
         buttonCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Verifica se os campos estão preenchidos
                 if (TextUtils.isEmpty(editCpf.getText().toString()) ||
                         TextUtils.isEmpty(editEmail.getText().toString()) ||
                         TextUtils.isEmpty(editNome.getText().toString()) ||
@@ -66,6 +69,7 @@ public class CadastroActivity extends AppCompatActivity {
                         TextUtils.isEmpty(editTelefone.getText().toString())) {
                     Toast.makeText(getApplicationContext(), "Preencha todos os campos", Toast.LENGTH_LONG).show();
                 } else {
+                    //Verifica se o email já não está cadastrado
                     database.collection("usuario")
                             .whereEqualTo("email", editEmail.getText().toString())
                             .get()
@@ -78,10 +82,6 @@ public class CadastroActivity extends AppCompatActivity {
                                         Intent intent = new Intent(CadastroActivity.this, LoginActivity.class);
                                         startActivity(intent);
                                     }
-                                    //Lê os dados e id existentes (usar posteriormente para fazer login automático)
-                                /*for (DocumentSnapshot document : task.getResult()) {
-                                    Log.d("teste", document.getId() + " => " + document.getData());
-                                }*/
                                 } else {
                                     Log.d("teste", "Error getting documents: ", task.getException());
                                 }
@@ -120,9 +120,18 @@ public class CadastroActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Intent intent = new Intent(CadastroActivity.this, LoginActivity.class);
+                        //Inicia uma sessão de login
+                        SharedPreferences sharedPreferences = getSharedPreferences("shared_preferences", Context.MODE_PRIVATE);
+                        //Insere os dados da sessão
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("email_key", editEmail.getText().toString());
+                        editor.putString("senha_key", editSenha.getText().toString());
+                        editor.putBoolean("administrador_key",false);
+                        editor.putString("nome_key", editNome.getText().toString() + " ");
+                        editor.putString("idUsuario_key", documentReference.getId());
+                        editor.apply();
+                        Intent intent = new Intent(CadastroActivity.this, MapsActivity.class);
                         startActivity(intent);
-                        Log.d("teste", "DocumentSnapshot added with ID: " + documentReference.getId());
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
