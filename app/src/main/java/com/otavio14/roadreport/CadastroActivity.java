@@ -20,6 +20,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -42,6 +45,8 @@ public class CadastroActivity extends AppCompatActivity {
     //Acesso a intância do Cloud Firestore
     FirebaseFirestore database = FirebaseFirestore.getInstance();
 
+    public FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +63,9 @@ public class CadastroActivity extends AppCompatActivity {
         buttonCadastrar = findViewById(R.id.buttonCadastrar);
         buttonLogin = findViewById(R.id.buttonLogin);
 
+        //Instance da conta
+        mAuth = FirebaseAuth.getInstance();
+
         buttonCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -69,23 +77,7 @@ public class CadastroActivity extends AppCompatActivity {
                         TextUtils.isEmpty(editTelefone.getText().toString())) {
                     Toast.makeText(getApplicationContext(), "Preencha todos os campos", Toast.LENGTH_LONG).show();
                 } else {
-                    //Verifica se o email já não está cadastrado
-                    database.collection("usuario")
-                            .whereEqualTo("email", editEmail.getText().toString())
-                            .get()
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
-                                    if (task.getResult().isEmpty()) {
-                                        cadastrarDados();
-                                    } else {
-                                        Toast.makeText(getApplicationContext(), "Email já cadastrado", Toast.LENGTH_LONG).show();
-                                        Intent intent = new Intent(CadastroActivity.this, LoginActivity.class);
-                                        startActivity(intent);
-                                    }
-                                } else {
-                                    Log.d("teste", "Error getting documents: ", task.getException());
-                                }
-                            });
+                    cadastrarConta();
                 }
             }
         });
@@ -97,6 +89,27 @@ public class CadastroActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    /**
+     * Cadastra a conta na autenticação do Firebase
+     */
+    private void cadastrarConta() {
+        mAuth.createUserWithEmailAndPassword(editEmail.getText().toString(), editSenha.getText().toString())
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("teste", "createUserWithEmail:success");
+                            cadastrarDados();
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.d("teste", "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     //Desabilita o botão voltar

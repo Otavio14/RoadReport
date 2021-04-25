@@ -22,6 +22,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -29,6 +30,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     ExtendedFloatingActionButton efabSair, efabVerOcorrencias, efabRelatarOcorrencia, efabNomeUsuario;
     FloatingActionButton fabMenuFechado;
     boolean menuStatus = false;
+
+    //Instance da conta
+    public FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +53,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         efabNomeUsuario = findViewById(R.id.nome_usuario);
 
         //Insere o nome do usuário no menu
-        String nome = sharedPreferences.getString("nome_key","");
-        efabNomeUsuario.setText(nome.split(" ",2)[0]);
+        String[] nome = sharedPreferences.getString("nome_key","").split(" ");
+        efabNomeUsuario.setText(nome[0]);
 
         fabMenuFechado.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +94,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.clear();
                             editor.apply();
+                            FirebaseAuth.getInstance().signOut();
                             Intent intent = new Intent(MapsActivity.this, LoginActivity.class);
                             startActivity(intent);
                         }
