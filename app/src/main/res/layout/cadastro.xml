@@ -44,6 +44,7 @@
         android:layout_marginTop="32dp"
         android:background="@drawable/styles"
         android:ems="10"
+        android:maxLength="13"
         android:hint="Telefone"
         android:inputType="phone"
         android:textSize="20dp"
