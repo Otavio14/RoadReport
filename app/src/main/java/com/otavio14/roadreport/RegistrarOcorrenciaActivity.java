@@ -28,8 +28,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -76,7 +74,8 @@ public class RegistrarOcorrenciaActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(editRua.getText().toString())
                         || TextUtils.isEmpty(editBairro.getText().toString())
                         || TextUtils.isEmpty(editReferencia.getText().toString())
-                        || TextUtils.isEmpty(editDescricao.getText().toString())) {
+                        || TextUtils.isEmpty(editDescricao.getText().toString())
+                        || mImageUri == null) {
                     Toast.makeText(getApplicationContext(), "Preencha todos os campos", Toast.LENGTH_LONG).show();
                 } else {
                     //Data atual do sistema
@@ -84,10 +83,10 @@ public class RegistrarOcorrenciaActivity extends AppCompatActivity {
 
                     //Recebe o id do usuário logado
                     SharedPreferences sharedPreferences = getSharedPreferences("shared_preferences", Context.MODE_PRIVATE);
-                    String idUsuario = sharedPreferences.getString("idUsuario_key","");
+                    String idUsuario = sharedPreferences.getString("idUsuario_key", "");
 
-                    usuario.put("codUsuario",idUsuario);
-                    usuario.put("dataInicio",sdf.format(new Date()));
+                    usuario.put("codUsuario", idUsuario);
+                    usuario.put("dataInicio", sdf.format(new Date()));
                     usuario.put("rua", editRua.getText().toString());
                     usuario.put("bairro", editBairro.getText().toString());
                     usuario.put("referencia", editReferencia.getText().toString());
@@ -157,7 +156,7 @@ public class RegistrarOcorrenciaActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             mImageUri = data.getData();
         }
     }
