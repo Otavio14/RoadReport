@@ -93,7 +93,6 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d("teste", "signInWithEmail:success");
                             database.collection("usuario")
                                     .whereEqualTo("email", editEmailLogin.getText().toString())
                                     .whereEqualTo("senha", editSenhaLogin.getText().toString())
@@ -111,6 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                                             } else {
                                                 //Insere os dados da sessão
                                                 SharedPreferences.Editor editor = sharedPreferences.edit();
+                                                editor.clear();
                                                 editor.putString("email_key", editEmailLogin.getText().toString());
                                                 editor.putString("senha_key", editSenhaLogin.getText().toString());
                                                 editor.putBoolean("administrador_key",administradorCampo);

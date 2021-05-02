@@ -60,23 +60,13 @@
                     app:layout_constraintStart_toStartOf="@+id/textNomeRua"
                     app:layout_constraintTop_toBottomOf="@+id/textNomeRua" />
 
-                <TextView
-                    android:id="@+id/textReferencia"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Referência"
-                    android:textColor="@color/orange"
-                    app:layout_constraintStart_toStartOf="@+id/textNomeBairro"
-                    app:layout_constraintTop_toBottomOf="@+id/textNomeBairro" />
-
                 <Spinner
                     android:id="@+id/spinnerStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/textNomeRua" />
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintStart_toStartOf="@id/textNomeBairro"
+                    app:layout_constraintTop_toBottomOf="@id/textNomeBairro" />
 
                 <!--This is ImageButton for the expansion icon.-->
                 <Button
@@ -87,7 +77,7 @@
                     android:layout_marginRight="16dp"
                     android:background="@drawable/ic_expand_more"
                     app:backgroundTint="@color/orange"
-                    app:layout_constraintBottom_toBottomOf="@+id/textReferencia"
+                    app:layout_constraintBottom_toBottomOf="@+id/spinnerStatus"
                     app:layout_constraintEnd_toEndOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -102,32 +92,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/fixed_layout_ocorrencias">
-
-                <TextView
-                    android:id="@+id/textDataInicio"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:text="Data Início"
-                    android:textColor="@color/orange"
-                    app:layout_constraintEnd_toEndOf="@+id/textDataInicioValor"
-                    app:layout_constraintStart_toStartOf="@+id/textDataInicioValor"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/textDataFim"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Data Fim"
-                    android:textColor="@color/orange"
-                    app:layout_constraintEnd_toEndOf="@+id/textDataFimValor"
-                    app:layout_constraintStart_toStartOf="@+id/textDataFimValor"
-                    app:layout_constraintTop_toTopOf="@+id/textDataInicio" />
 
                 <ImageView
                     android:id="@+id/textFotoAntes"
@@ -138,9 +107,11 @@
                     android:layout_marginTop="8dp"
                     android:background="@drawable/styles2"
                     android:gravity="center"
+                    app:layout_constraintEnd_toStartOf="@+id/textFotoDepois"
+                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textDataInicioValor"
-                    app:srcCompat="@drawable/ic_status_espera" />
+                    app:srcCompat="@drawable/ic_photo" />
 
                 <ImageView
                     android:id="@+id/textFotoDepois"
@@ -152,35 +123,39 @@
                     android:background="@drawable/styles2"
                     android:gravity="center"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/textFotoAntes"
                     app:layout_constraintTop_toBottomOf="@+id/textDataFimValor"
-                    app:srcCompat="@drawable/ic_status_espera" />
+                    app:srcCompat="@drawable/ic_photo" />
 
                 <TextView
                     android:id="@+id/textDataInicioValor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="24dp"
                     android:text="13/01/2021"
                     android:textColor="@color/orange"
                     app:layout_constraintEnd_toEndOf="@+id/textFotoAntes"
                     app:layout_constraintStart_toStartOf="@+id/textFotoAntes"
-                    app:layout_constraintTop_toBottomOf="@+id/textDataInicio" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/textDataFimValor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="20/01/2021"
+                    android:layout_marginTop="24dp"
+                    android:text="Em breve"
                     android:textColor="@color/orange"
                     app:layout_constraintEnd_toEndOf="@+id/textFotoDepois"
                     app:layout_constraintStart_toStartOf="@+id/textFotoDepois"
-                    app:layout_constraintTop_toBottomOf="@+id/textDataFim" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
                     android:id="@+id/textDescricao"
-                    android:layout_width="400dp"
+                    android:layout_width="match_parent"
                     android:layout_height="150dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginLeft="16dp"
                     android:layout_marginTop="4dp"
                     android:background="@drawable/styles2"
                     android:ems="10"

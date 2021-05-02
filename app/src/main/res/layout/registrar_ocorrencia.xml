@@ -1,77 +1,66 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Layout referente à tela de resitro de ocorrências -->
+<?xml version="1.0" encoding="utf-8"?><!-- Layout referente à tela de resitro de ocorrências -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/editRua"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/styles"
-        android:ems="10"
-        android:hint="Rua"
-        android:inputType="text"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toTopOf="@+id/editBairro"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textRegistrarOcorrencia" />
-
     <TextView
         android:id="@+id/textRegistrarOcorrencia"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:text="Registrar Ocorrência"
         android:textColor="@color/orange"
         android:textSize="25dp"
-        app:layout_constraintBottom_toTopOf="@+id/editRua"
+        app:layout_constraintBottom_toTopOf="@+id/textLocalizacao"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/editBairro"
-        android:layout_width="300dp"
+    <TextView
+        android:id="@+id/textLocalizacao"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/styles"
-        android:ems="10"
-        android:hint="Bairro"
-        android:inputType="text"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toTopOf="@+id/editReferencia"
+        android:text="Localização"
+        android:textColor="@color/orange"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonLocalAtual"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editRua" />
+        app:layout_constraintTop_toBottomOf="@+id/textRegistrarOcorrencia" />
 
-    <EditText
-        android:id="@+id/editReferencia"
-        android:layout_width="300dp"
+    <Button
+        android:id="@+id/buttonLocalAtual"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/styles"
-        android:ems="10"
-        android:hint="Referência"
-        android:inputType="text"
-        android:textSize="18dp"
+        android:background="@drawable/rounded_borders"
+        android:drawableTop="@drawable/ic_local_atual"
+        android:drawableTint="@color/white"
+        android:text="Atual"
+        app:backgroundTint="@color/gray"
         app:layout_constraintBottom_toTopOf="@+id/editDescricao"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toStartOf="@+id/buttonEscolherLocal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editBairro" />
+        app:layout_constraintTop_toBottomOf="@+id/textLocalizacao" />
+
+    <Button
+        android:id="@+id/buttonEscolherLocal"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_borders"
+        android:drawableTop="@drawable/ic_escolher_local"
+        android:drawableTint="@color/white"
+        android:text="Escolher"
+        app:backgroundTint="@color/gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonLocalAtual"
+        app:layout_constraintTop_toTopOf="@id/buttonLocalAtual" />
 
     <EditText
         android:id="@+id/editDescricao"
         android:layout_width="300dp"
         android:layout_height="180dp"
-        android:layout_marginTop="16dp"
         android:background="@drawable/styles2"
         android:ems="10"
         android:gravity="start|top"
@@ -80,50 +69,30 @@
         android:textSize="18dp"
         app:layout_constraintBottom_toTopOf="@+id/imageButtonUpload"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editReferencia" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonLocalAtual" />
 
     <Button
         android:id="@+id/buttonRegistrar"
         android:layout_width="250dp"
         android:layout_height="60dp"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="8dp"
         android:backgroundTint="@color/orange"
         android:text="Registrar"
         app:cornerRadius="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageButtonUpload" />
 
     <ImageButton
         android:id="@+id/imageButtonUpload"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toTopOf="@+id/buttonRegistrar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editDescricao"
         app:srcCompat="@drawable/ic_photo" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="RoadReport"
-        android:textColor="@color/orange"
-        android:textSize="40dp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/textRegistrarOcorrencia"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

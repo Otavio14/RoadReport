@@ -34,7 +34,6 @@ public class OcorrenciasActivity extends AppCompatActivity {
 
     ArrayList<String> nomeRua = new ArrayList<>(Arrays.asList("Nome Rua 1", "Nome Rua 2", "Nome Rua 3"));
     ArrayList<String> nomeBairro = new ArrayList<>(Arrays.asList("Nome Bairro 1", "Nome Bairro 2", "Nome Bairro 3"));
-    ArrayList<String> referencia = new ArrayList<>(Arrays.asList("Referência 1", "Referência 2", "Referência  3"));
     ArrayList<String> textoStatus = new ArrayList<>(Arrays.asList("Em espera", "Em andamento", "Concluído"));
     ArrayList<Integer> iconeStatus = new ArrayList<>(Arrays.asList(R.drawable.ic_status_espera, R.drawable.ic_status_andamento, R.drawable.ic_status_concluido));
     ArrayList<String> dataInicio = new ArrayList<>(Arrays.asList("Data Início 1", "Data Início 2", "Data Início 3"));
@@ -60,7 +59,7 @@ public class OcorrenciasActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerView);
 
-        MyAdapter myAdapter = new MyAdapter(this,nomeRua,nomeBairro,referencia,textoStatus,iconeStatus,dataInicio,dataFim,fotoAntes,fotoDepois,descricao,nomeResponsavel);
+        MyAdapter myAdapter = new MyAdapter(this,nomeRua,nomeBairro,textoStatus,iconeStatus,dataInicio,dataFim,fotoAntes,fotoDepois,descricao,nomeResponsavel);
         recyclerView.setAdapter(myAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 

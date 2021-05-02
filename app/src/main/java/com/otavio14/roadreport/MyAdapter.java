@@ -29,7 +29,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     Context context;
     ArrayList<String> nomeRua = new ArrayList<>();
     ArrayList<String> nomeBairro = new ArrayList<>();
-    ArrayList<String> referencia = new ArrayList<>();
     ArrayList<String> textoStatus = new ArrayList<>();
     ArrayList<Integer> iconeStatus = new ArrayList<>();
     ArrayList<String> dataInicio = new ArrayList<>();
@@ -40,15 +39,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     ArrayList<String> nomeResponsavel = new ArrayList<>();
 
     public MyAdapter(Context ct, ArrayList<String> p_nomeRua, ArrayList<String> p_nomeBairro,
-                     ArrayList<String> p_referencia, ArrayList<String> p_textStatus,
-                     ArrayList<Integer> p_iconeStatus, ArrayList<String> p_dataInicio,
+                     ArrayList<String> p_textStatus, ArrayList<Integer> p_iconeStatus, ArrayList<String> p_dataInicio,
                      ArrayList<String> p_dataFim, ArrayList<Integer> p_fotoAntes,
                      ArrayList<Integer> p_fotoDepois, ArrayList<String> p_descricao,
                      ArrayList<String> p_nomeResponsavel) {
         context = ct;
         nomeRua = p_nomeRua;
         nomeBairro = p_nomeBairro;
-        referencia = p_referencia;
         textoStatus = p_textStatus;
         iconeStatus = p_iconeStatus;
         dataInicio = p_dataInicio;
@@ -71,7 +68,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.nomeRua.setText(nomeRua.get(position));
         holder.nomeBairro.setText(nomeBairro.get(position));
-        holder.referencia.setText(referencia.get(position));
         holder.dataInicioValor.setText(dataInicio.get(position));
         holder.dataFimValor.setText(dataFim.get(position));
         holder.descricao.setText(descricao.get(position));
@@ -121,7 +117,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView nomeRua, nomeBairro, referencia, dataInicio, dataFim, dataInicioValor, dataFimValor, descricao, nomeResponsavel;
+        TextView nomeRua, nomeBairro, dataInicio, dataFim, dataInicioValor, dataFimValor, descricao, nomeResponsavel;
         ImageView fotoAntes, fotoDepois;
         CardView cardView;
         Button buttonExpandirOcorrencias;
@@ -133,7 +129,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
             nomeRua = itemView.findViewById(R.id.textNomeRua);
             nomeBairro = itemView.findViewById(R.id.textNomeBairro);
-            referencia = itemView.findViewById(R.id.textReferencia);
             dataInicio = itemView.findViewById(R.id.textDataInicio);
             dataFim = itemView.findViewById(R.id.textDataFim);
             dataInicioValor = itemView.findViewById(R.id.textDataInicioValor);

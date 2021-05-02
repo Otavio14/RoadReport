@@ -1,10 +1,14 @@
 package com.otavio14.roadreport;
 
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,6 +50,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Inicia uma sessão de login
         SharedPreferences sharedPreferences = getSharedPreferences("shared_preferences", Context.MODE_PRIVATE);
 
+        //bloqueia o modo escuro
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         fabMenuFechado = findViewById(R.id.menu_fechado);
         efabVerOcorrencias = findViewById(R.id.ver_ocorrencias);
         efabSair = findViewById(R.id.sair);
@@ -53,13 +60,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         efabNomeUsuario = findViewById(R.id.nome_usuario);
 
         //Insere o nome do usuário no menu
-        String[] nome = sharedPreferences.getString("nome_key","").split(" ");
-        efabNomeUsuario.setText(nome[0]);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                String[] nome = sharedPreferences.getString("nome_key", "").split(" ");
+                efabNomeUsuario.setText(nome[0]);
+            }
+        });
 
         fabMenuFechado.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(menuStatus) {
+                if (menuStatus) {
                     //Oculta o menu
                     fabMenuFechado.setImageResource(R.drawable.ic_menu_fechado);
                     fabMenuFechado.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange)));
@@ -68,8 +80,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     efabVerOcorrencias.hide();
                     efabNomeUsuario.hide();
                     menuStatus = false;
-                }
-                else {
+                } else {
                     //Exibe o menu
                     fabMenuFechado.setImageResource(R.drawable.ic_menu_aberto);
                     fabMenuFechado.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gray)));
@@ -130,10 +141,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
         LatLng fiec = new LatLng(-23.097395584050947, -47.22833023185295);
         mMap.addMarker(new MarkerOptions().position(fiec).title("Marker em FIEC"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(fiec));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fiec,12f));
     }
 }
