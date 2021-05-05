@@ -1,5 +1,6 @@
 package com.otavio14.roadreport;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -13,20 +14,22 @@ import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -35,8 +38,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     FloatingActionButton fabMenuFechado;
     boolean menuStatus = false;
 
-    //Instance da conta
-    public FirebaseAuth mAuth;
+    FirebaseFirestore database;
+    SharedPreferences sharedPreferences;
+    Boolean admin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +52,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         //Inicia uma sessão de login
-        SharedPreferences sharedPreferences = getSharedPreferences("shared_preferences", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("shared_preferences", Context.MODE_PRIVATE);
+
+        //Acesso a intância do Cloud Firestore
+        database = FirebaseFirestore.getInstance();
 
         //bloqueia o modo escuro
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
@@ -65,6 +72,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
                 String[] nome = sharedPreferences.getString("nome_key", "").split(" ");
                 efabNomeUsuario.setText(nome[0]);
+                admin = sharedPreferences.getBoolean("administrador_key",false);
             }
         });
 
@@ -153,8 +161,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         mMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-        LatLng fiec = new LatLng(-23.097395584050947, -47.22833023185295);
-        mMap.addMarker(new MarkerOptions().position(fiec).title("Marker em FIEC"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fiec,12f));
+        LatLng localInicial = new LatLng(-23.097395584050947, -47.22833023185295);
+        //mMap.addMarker(new MarkerOptions().position(localInicial)).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(localInicial,12f));
+        mapsMarker();
+    }
+
+    private void mapsMarker() {
+        database.collection("registro").whereEqualTo("validacao",true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+                        if(admin == true && document.getString("situacao").equals("Em espera")) {
+                            LatLng latLng1 = new LatLng(Double.parseDouble(document.getString("latitude")), Double.parseDouble(document.getString("longitude")));
+                            mMap.addMarker(new MarkerOptions().position(latLng1)).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                        }
+                        if (document.getString("situacao").equals("Em andamento")) {
+                            LatLng latLng2 = new LatLng(Double.parseDouble(document.getString("latitude")), Double.parseDouble(document.getString("longitude")));
+                            mMap.addMarker(new MarkerOptions().position(latLng2)).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                        }
+                        if (document.getString("situacao").equals("Concluido")) {
+                            LatLng latLng3 = new LatLng(Double.parseDouble(document.getString("latitude")), Double.parseDouble(document.getString("longitude")));
+                            mMap.addMarker(new MarkerOptions().position(latLng3)).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                        }
+                    }
+                } else {
+                    Log.d("erro", "Error getting documents: ", task.getException());
+                }
+            }
+        });
     }
 }

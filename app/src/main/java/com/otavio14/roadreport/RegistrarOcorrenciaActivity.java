@@ -175,9 +175,12 @@ public class RegistrarOcorrenciaActivity extends AppCompatActivity {
                     try {
                         Geocoder geocoder = new Geocoder(RegistrarOcorrenciaActivity.this, Locale.getDefault());
                         List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                        String endereco[] = addressList.get(0).getAddressLine(0).split("-");
+                        String subEndereco[] = endereco[1].split(",");
                         registro.clear();
-                        registro.put("latitude",String.valueOf(addressList.get(0).getLatitude()));
-                        registro.put("longitude",String.valueOf(addressList.get(0).getLongitude()));
+                        registro.put("bairro",subEndereco[0].trim());
+                        registro.put("latitude", String.valueOf(addressList.get(0).getLatitude()));
+                        registro.put("longitude", String.valueOf(addressList.get(0).getLongitude()));
                         local = true;
                     } catch (IOException e) {
                         Log.w("", "Erro de localização: " + e);
@@ -222,13 +225,23 @@ public class RegistrarOcorrenciaActivity extends AppCompatActivity {
             imageButtonUpload.setImageURI(mImageUri);
         }
         if (requestCode == 1) {
-            if(resultCode == Activity.RESULT_OK){
-                String result=data.getStringExtra("coord");
-                Log.d("teste","LatLng: " + result);
-                String coord[] = result.split(",");
+            if (resultCode == Activity.RESULT_OK) {
                 registro.clear();
-                registro.put("latitude",coord[0]);
-                registro.put("longitude",coord[1]);
+                String result = data.getStringExtra("coord");
+                String coord[] = result.split(",");
+                Geocoder geocoder;
+                List<Address> addresses;
+                geocoder = new Geocoder(this, Locale.getDefault());
+                try {
+                    addresses = geocoder.getFromLocation(Double.parseDouble(coord[0]), Double.parseDouble(coord[1]), 1);
+                    String endereco[] = addresses.get(0).getAddressLine(0).split("-");
+                    String subEndereco[] = endereco[1].split(",");
+                    registro.put("bairro",subEndereco[0].trim());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                registro.put("latitude", coord[0]);
+                registro.put("longitude", coord[1]);
                 local = true;
             }
             if (resultCode == Activity.RESULT_CANCELED) {

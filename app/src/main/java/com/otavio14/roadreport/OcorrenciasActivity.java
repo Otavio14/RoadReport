@@ -1,13 +1,18 @@
 package com.otavio14.roadreport;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -20,13 +25,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.transition.AutoTransition;
 import android.transition.TransitionManager;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class OcorrenciasActivity extends AppCompatActivity {
+    FirebaseFirestore database;
+    Query queryUsuario, queryOutros;
 
-    TextView botaoExpandir;
+    //Variáveis para o estado dos botões de filtro
+    int estadoFiltroData = 0, estadoFiltroStatus = 0, estadoFiltroOrdem = 0;
+
+    TextView botaoExpandir, filtroData, filtroStatus, filtroOrdem;
     ConstraintLayout hiddenView;
     CardView cardView;
 
@@ -51,15 +69,34 @@ public class OcorrenciasActivity extends AppCompatActivity {
         //bloqueia o modo escuro
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
+        //Acesso a intância do Cloud Firestore
+        database = FirebaseFirestore.getInstance();
+
         cardView = findViewById(R.id.base_cardview);
         botaoExpandir = findViewById(R.id.filtros);
+        filtroData = findViewById(R.id.filtroData);
+        filtroStatus = findViewById(R.id.filtroStatus);
+        filtroOrdem = findViewById(R.id.filtroOrdem);
         hiddenView = findViewById(R.id.hidden_view);
         Drawable ic_expandir = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expand_more, null);
         Drawable ic_recolher = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expand_less, null);
+        Drawable ic_seta_up_down = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_seta_up_down, null);
+
 
         recyclerView = findViewById(R.id.recyclerView);
 
-        MyAdapter myAdapter = new MyAdapter(this,nomeRua,nomeBairro,textoStatus,iconeStatus,dataInicio,dataFim,fotoAntes,fotoDepois,descricao,nomeResponsavel);
+        SharedPreferences sharedPreferences = getSharedPreferences("shared_preferences", Context.MODE_PRIVATE);
+        Boolean admin = false;
+        admin = sharedPreferences.getBoolean("administrador_key", admin);
+        String idUsuario = sharedPreferences.getString("idUsuario_key", "");
+
+        queryOutros = database.collection("registro").orderBy("dataInicio", Query.Direction.ASCENDING);
+        queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).orderBy("dataInicio", Query.Direction.ASCENDING);
+
+        registrosUsuario(admin, idUsuario);
+        registrosGeral(admin, idUsuario);
+
+        MyAdapter myAdapter = new MyAdapter(this, nomeRua, nomeBairro, textoStatus, iconeStatus, dataInicio, dataFim, fotoAntes, fotoDepois, descricao, nomeResponsavel);
         recyclerView.setAdapter(myAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -89,7 +126,110 @@ public class OcorrenciasActivity extends AppCompatActivity {
                             new AutoTransition());
                     hiddenView.setVisibility(View.VISIBLE);
                     botaoExpandir.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_recolher, null);
+
+                    filtroData.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            switch (estadoFiltroData) {
+                                case 0:
+
+                                    //Mudança de estado inicial para crescente
+                                    estadoFiltroData = 1;
+                                    filtroData.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_recolher, null);
+                                    filtroStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
+                                    filtroOrdem.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
+                                    break;
+                                case 1:
+
+                                    //Mudança de estado crescente para decrescente
+
+                                    estadoFiltroData = 2;
+                                    filtroData.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_expandir, null);
+                                    filtroStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
+                                    filtroOrdem.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
+                                    break;
+                                case 2:
+
+                                    //Mudança de estado descrescente para inicial
+
+                                    estadoFiltroData = 0;
+                                    filtroData.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
+                                    filtroStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
+                                    filtroOrdem.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
+                                    break;
+                            }
+                        }
+                    });
+
+                    filtroStatus.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            switch (estadoFiltroStatus) {
+                                case 0: //Mudança de estado inicial para em espera
+
+                                    break;
+                                case 1: //Mudança de estado em espera para em andamento
+
+                                    break;
+                                case 2: //Mudança de estado em andamento para concluido
+
+                                    break;
+                                case 3: //Mudança de estado concluido para inicial
+
+                                    break;
+                            }
+                        }
+                    });
+
+                    filtroOrdem.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            switch (estadoFiltroOrdem) {
+                                case 0: //Mudança de estado inicial para crescente
+
+                                    break;
+                                case 1: //Mudança de estado crescente para decrescente
+
+                                    break;
+                                case 2: //Mudança de estado descrescente para inicial
+
+                                    break;
+                            }
+                        }
+                    });
                 }
+            }
+        });
+    }
+
+    private void registrosUsuario(Boolean admin, String idUsuario) {
+        queryUsuario.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d("teste",""+document.getString("dataInicio"));
+                    }
+                } else {
+                    Log.d("erro", "Error getting documents.", task.getException());
+                }
+
+            }
+        });
+    }
+
+    private void registrosGeral(Boolean admin, String idUsuario) {
+        queryOutros.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Log.d("teste",""+document.getString("dataInicio"));
+                    }
+                } else {
+                    Log.d("erro", "Error getting documents.", task.getException());
+                }
+
             }
         });
     }

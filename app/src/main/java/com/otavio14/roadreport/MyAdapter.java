@@ -129,8 +129,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
             nomeRua = itemView.findViewById(R.id.textNomeRua);
             nomeBairro = itemView.findViewById(R.id.textNomeBairro);
-            dataInicio = itemView.findViewById(R.id.textDataInicio);
-            dataFim = itemView.findViewById(R.id.textDataFim);
             dataInicioValor = itemView.findViewById(R.id.textDataInicioValor);
             dataFimValor = itemView.findViewById(R.id.textDataFimValor);
             fotoAntes = itemView.findViewById(R.id.textFotoAntes);

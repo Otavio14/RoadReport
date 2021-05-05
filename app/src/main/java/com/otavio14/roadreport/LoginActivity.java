@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 editor.apply();
                                             }
                                         } else {
-                                            Log.d("teste", "Error getting documents: ", task2.getException());
+                                            Log.d("erro", "Error getting documents: ", task2.getException());
                                         }
                                     });
                             Intent intent = new Intent(LoginActivity.this, MapsActivity.class);

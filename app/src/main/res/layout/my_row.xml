@@ -68,6 +68,23 @@
                     app:layout_constraintStart_toStartOf="@id/textNomeBairro"
                     app:layout_constraintTop_toBottomOf="@id/textNomeBairro" />
 
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="16dp"
+                    android:clickable="true"
+                    android:drawableEnd="@drawable/ic_marker"
+                    android:drawableRight="@drawable/ic_marker"
+                    android:drawableTint="@color/orange"
+                    android:gravity="center"
+                    android:text="Mapa"
+                    android:textColor="@color/orange"
+                    android:textSize="18dp"
+                    app:backgroundTint="@color/orange"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <!--This is ImageButton for the expansion icon.-->
                 <Button
                     android:id="@+id/buttonExpandirOcorrencias"
@@ -92,7 +109,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -154,9 +171,9 @@
                     android:id="@+id/textDescricao"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
-                    android:layout_marginRight="16dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="4dp"
+                    android:layout_marginRight="16dp"
                     android:background="@drawable/styles2"
                     android:ems="10"
                     android:gravity="center"
