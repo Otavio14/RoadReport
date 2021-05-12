@@ -2,6 +2,7 @@ package com.otavio14.roadreport;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.transition.AutoTransition;
 import android.transition.TransitionManager;
@@ -22,29 +23,31 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     Context context;
-    ArrayList<String> nomeRua = new ArrayList<>();
     ArrayList<String> nomeBairro = new ArrayList<>();
     ArrayList<String> textoStatus = new ArrayList<>();
+    ArrayList<String> opcoesStatus = new ArrayList<>(Arrays.asList("Invalidar", "Em espera", "Em andamento", "Concluído"));
     ArrayList<Integer> iconeStatus = new ArrayList<>();
     ArrayList<String> dataInicio = new ArrayList<>();
     ArrayList<String> dataFim = new ArrayList<>();
-    ArrayList<Integer> fotoAntes = new ArrayList<>();
-    ArrayList<Integer> fotoDepois = new ArrayList<>();
+    ArrayList<String> fotoAntes = new ArrayList<>();
+    ArrayList<StorageReference> fotoDepois = new ArrayList<>();
     ArrayList<String> descricao = new ArrayList<>();
     ArrayList<String> nomeResponsavel = new ArrayList<>();
 
-    public MyAdapter(Context ct, ArrayList<String> p_nomeRua, ArrayList<String> p_nomeBairro,
+    public MyAdapter(Context ct, ArrayList<String> p_nomeBairro,
                      ArrayList<String> p_textStatus, ArrayList<Integer> p_iconeStatus, ArrayList<String> p_dataInicio,
-                     ArrayList<String> p_dataFim, ArrayList<Integer> p_fotoAntes,
-                     ArrayList<Integer> p_fotoDepois, ArrayList<String> p_descricao,
+                     ArrayList<String> p_dataFim, ArrayList<String> p_fotoAntes,
+                     ArrayList<StorageReference> p_fotoDepois, ArrayList<String> p_descricao,
                      ArrayList<String> p_nomeResponsavel) {
         context = ct;
-        nomeRua = p_nomeRua;
         nomeBairro = p_nomeBairro;
         textoStatus = p_textStatus;
         iconeStatus = p_iconeStatus;
@@ -66,19 +69,50 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.nomeRua.setText(nomeRua.get(position));
         holder.nomeBairro.setText(nomeBairro.get(position));
         holder.dataInicioValor.setText(dataInicio.get(position));
-        holder.dataFimValor.setText(dataFim.get(position));
-        holder.descricao.setText(descricao.get(position));
-        holder.nomeResponsavel.setText(nomeResponsavel.get(position));
-        holder.fotoAntes.setImageResource(fotoAntes.get(position));
-        holder.fotoDepois.setImageResource(fotoDepois.get(position));
+        if (dataFim.get(position) != null) {
+            holder.dataFimValor.setText(dataFim.get(position));
+        } else {
+            holder.dataFimValor.setText("Em breve");
+        }
+        if (descricao.get(position) != null) {
+            holder.descricao.setText(descricao.get(position));
+        } else {
+            holder.descricao.setText("Descrição");
+        }
+        if (nomeResponsavel.get(position) != null) {
+            holder.nomeResponsavel.setText(nomeResponsavel.get(position));
+        } else {
+            holder.nomeResponsavel.setText("Nome do Responsável");
+        }
 
+        if(position < fotoAntes.size()) {
+            Log.d("teste", "Array: " + fotoAntes.size() + " Posição: " + position);
+            Glide.with(context).load(fotoAntes.get(position)).into(holder.fotoAntes);
+        }
+
+        /*if (fotoDepois.get(position) != null) {
+            //holder.fotoDepois.setImageResource(fotoDepois.get(position));
+        } else {
+            //holder.fotoDepois.setImageResource(fotoDepois.get(position));
+        }*/
         //Spinner do status
-        ArrayAdapter<String> adapterStatus = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, textoStatus);
+        ArrayAdapter<String> adapterStatus = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, opcoesStatus);
         adapterStatus.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         holder.spinnerStatus.setAdapter(adapterStatus);
+        switch (textoStatus.get(position)) {
+            case "Em espera":
+                holder.spinnerStatus.setSelection(1);
+                break;
+            case "Em andamento":
+                holder.spinnerStatus.setSelection(2);
+                break;
+            case "Concluido":
+                holder.spinnerStatus.setSelection(3);
+                break;
+        }
+
 
         holder.buttonExpandirOcorrencias.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -127,7 +161,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            nomeRua = itemView.findViewById(R.id.textNomeRua);
             nomeBairro = itemView.findViewById(R.id.textNomeBairro);
             dataInicioValor = itemView.findViewById(R.id.textDataInicioValor);
             dataFimValor = itemView.findViewById(R.id.textDataFimValor);
@@ -140,7 +173,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             cardView = itemView.findViewById(R.id.base_cardview_ocorrencias);
             buttonExpandirOcorrencias = itemView.findViewById(R.id.buttonExpandirOcorrencias);
             hiddenViewOcorrencias = itemView.findViewById(R.id.hidden_view_ocorrencias);
-
         }
     }
 }

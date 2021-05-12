@@ -2,14 +2,12 @@ package com.otavio14.roadreport;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,19 +24,29 @@ import android.transition.AutoTransition;
 import android.transition.TransitionManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class OcorrenciasActivity extends AppCompatActivity {
     FirebaseFirestore database;
+
+    //Acesso a intância do Cloud Storage
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+
+    // Create a Cloud Storage reference from the app
+    StorageReference storageRef = storage.getInstance().getReference();
+    StorageReference pathReference;
+
     Query queryUsuario, queryOutros;
 
     //Variáveis para o estado dos botões de filtro
@@ -48,18 +56,22 @@ public class OcorrenciasActivity extends AppCompatActivity {
     ConstraintLayout hiddenView;
     CardView cardView;
 
-    RecyclerView recyclerView;
+    boolean admin;
+    String idUsuario;
 
-    ArrayList<String> nomeRua = new ArrayList<>(Arrays.asList("Nome Rua 1", "Nome Rua 2", "Nome Rua 3"));
-    ArrayList<String> nomeBairro = new ArrayList<>(Arrays.asList("Nome Bairro 1", "Nome Bairro 2", "Nome Bairro 3"));
-    ArrayList<String> textoStatus = new ArrayList<>(Arrays.asList("Em espera", "Em andamento", "Concluído"));
-    ArrayList<Integer> iconeStatus = new ArrayList<>(Arrays.asList(R.drawable.ic_status_espera, R.drawable.ic_status_andamento, R.drawable.ic_status_concluido));
-    ArrayList<String> dataInicio = new ArrayList<>(Arrays.asList("Data Início 1", "Data Início 2", "Data Início 3"));
-    ArrayList<String> dataFim = new ArrayList<>(Arrays.asList("Data Fim 1", "Data Fim 2", "Data Fim 3"));
-    ArrayList<Integer> fotoAntes = new ArrayList<>(Arrays.asList(R.drawable.ic_status_espera, R.drawable.ic_status_andamento, R.drawable.ic_status_concluido));
-    ArrayList<Integer> fotoDepois = new ArrayList<>(Arrays.asList(R.drawable.ic_status_espera, R.drawable.ic_status_andamento, R.drawable.ic_status_concluido));
-    ArrayList<String> descricao = new ArrayList<>(Arrays.asList("Descrição 1", "Descrição 2", "Descrição 3"));
-    ArrayList<String> nomeResponsavel = new ArrayList<>(Arrays.asList("Nome Responsável 1", "Nome Responsável 2", "Nome Responsável 3"));
+    RecyclerView recyclerView;
+    MyAdapter myAdapter;
+
+    ArrayList<String> idOcorrencia = new ArrayList<>();
+    ArrayList<String> nomeBairro = new ArrayList<>();
+    ArrayList<String> textoStatus = new ArrayList<>();
+    ArrayList<Integer> iconeStatus = new ArrayList<>(Arrays.asList(R.drawable.ic_status_espera, R.drawable.ic_status_andamento, R.drawable.ic_status_concluido, R.drawable.ic_status_concluido, R.drawable.ic_status_concluido));
+    ArrayList<String> dataInicio = new ArrayList<>();
+    ArrayList<String> dataFim = new ArrayList<>();
+    ArrayList<String> fotoAntes = new ArrayList<>();
+    ArrayList<StorageReference> fotoDepois = new ArrayList<>();
+    ArrayList<String> descricao = new ArrayList<>();
+    ArrayList<String> nomeResponsavel = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,14 +93,18 @@ public class OcorrenciasActivity extends AppCompatActivity {
         Drawable ic_expandir = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expand_more, null);
         Drawable ic_recolher = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_expand_less, null);
         Drawable ic_seta_up_down = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_seta_up_down, null);
+        Drawable ic_status_padrao = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_status_padrao, null);
+        Drawable ic_status_espera = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_status_espera, null);
+        Drawable ic_status_andamento = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_status_andamento, null);
+        Drawable ic_status_concluido = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_status_concluido, null);
 
 
         recyclerView = findViewById(R.id.recyclerView);
 
         SharedPreferences sharedPreferences = getSharedPreferences("shared_preferences", Context.MODE_PRIVATE);
-        Boolean admin = false;
+        admin = false;
         admin = sharedPreferences.getBoolean("administrador_key", admin);
-        String idUsuario = sharedPreferences.getString("idUsuario_key", "");
+        idUsuario = sharedPreferences.getString("idUsuario_key", "");
 
         queryOutros = database.collection("registro").orderBy("dataInicio", Query.Direction.ASCENDING);
         queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).orderBy("dataInicio", Query.Direction.ASCENDING);
@@ -96,9 +112,9 @@ public class OcorrenciasActivity extends AppCompatActivity {
         registrosUsuario(admin, idUsuario);
         registrosGeral(admin, idUsuario);
 
-        MyAdapter myAdapter = new MyAdapter(this, nomeRua, nomeBairro, textoStatus, iconeStatus, dataInicio, dataFim, fotoAntes, fotoDepois, descricao, nomeResponsavel);
-        recyclerView.setAdapter(myAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        myAdapter = new MyAdapter(this, nomeBairro, textoStatus, iconeStatus, dataInicio, dataFim, fotoAntes, fotoDepois, descricao, nomeResponsavel);
+        recyclerView.setAdapter(myAdapter);
 
         botaoExpandir.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -132,29 +148,42 @@ public class OcorrenciasActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             switch (estadoFiltroData) {
                                 case 0:
-
                                     //Mudança de estado inicial para crescente
+                                    queryOutros = database.collection("registro").orderBy("dataInicio", Query.Direction.DESCENDING);
+                                    queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).orderBy("dataInicio", Query.Direction.DESCENDING);
+                                    registrosUsuario(admin, idUsuario);
+                                    registrosGeral(admin, idUsuario);
                                     estadoFiltroData = 1;
+                                    estadoFiltroStatus = 0;
+                                    estadoFiltroOrdem = 0;
                                     filtroData.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_recolher, null);
-                                    filtroStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
+                                    filtroStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_status_padrao, null);
                                     filtroOrdem.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
                                     break;
                                 case 1:
-
                                     //Mudança de estado crescente para decrescente
-
+                                    queryOutros = database.collection("registro").orderBy("dataInicio", Query.Direction.ASCENDING);
+                                    queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).orderBy("dataInicio", Query.Direction.ASCENDING);
+                                    registrosUsuario(admin, idUsuario);
+                                    registrosGeral(admin, idUsuario);
                                     estadoFiltroData = 2;
+                                    estadoFiltroStatus = 0;
+                                    estadoFiltroOrdem = 0;
                                     filtroData.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_expandir, null);
-                                    filtroStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
+                                    filtroStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_status_padrao, null);
                                     filtroOrdem.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
                                     break;
                                 case 2:
-
                                     //Mudança de estado descrescente para inicial
-
+                                    queryOutros = database.collection("registro").orderBy("dataInicio", Query.Direction.ASCENDING);
+                                    queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).orderBy("dataInicio", Query.Direction.ASCENDING);
+                                    registrosUsuario(admin, idUsuario);
+                                    registrosGeral(admin, idUsuario);
                                     estadoFiltroData = 0;
+                                    estadoFiltroStatus = 0;
+                                    estadoFiltroOrdem = 0;
                                     filtroData.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
-                                    filtroStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
+                                    filtroStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_status_padrao, null);
                                     filtroOrdem.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
                                     break;
                             }
@@ -165,17 +194,55 @@ public class OcorrenciasActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             switch (estadoFiltroStatus) {
-                                case 0: //Mudança de estado inicial para em espera
-
+                                case 0:
+                                    //Mudança de estado inicial para em espera
+                                    queryOutros = database.collection("registro").whereEqualTo("status","Em espera").orderBy("dataInicio", Query.Direction.DESCENDING);
+                                    queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).whereEqualTo("status","Em espera").orderBy("dataInicio", Query.Direction.DESCENDING);
+                                    registrosUsuario(admin, idUsuario);
+                                    registrosGeral(admin, idUsuario);
+                                    estadoFiltroStatus = 1;
+                                    estadoFiltroData = 0;
+                                    estadoFiltroOrdem = 0;
+                                    filtroStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_status_espera, null);
+                                    filtroData.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
+                                    filtroOrdem.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
                                     break;
-                                case 1: //Mudança de estado em espera para em andamento
-
+                                case 1:
+                                    //Mudança de estado em espera para em andamento
+                                    queryOutros = database.collection("registro").whereEqualTo("status","Em andamento").orderBy("bairro", Query.Direction.ASCENDING);
+                                    queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).whereEqualTo("status","Em andamento").orderBy("dataInicio", Query.Direction.ASCENDING);
+                                    registrosUsuario(admin, idUsuario);
+                                    registrosGeral(admin, idUsuario);
+                                    estadoFiltroStatus = 2;
+                                    estadoFiltroData = 0;
+                                    estadoFiltroOrdem = 0;
+                                    filtroStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_status_andamento, null);
+                                    filtroData.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
+                                    filtroOrdem.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
                                     break;
-                                case 2: //Mudança de estado em andamento para concluido
-
+                                case 2:
+                                    //Mudança de estado em andamento para concluido
+                                    queryOutros = database.collection("registro").whereEqualTo("status","Concluido").orderBy("dataInicio", Query.Direction.ASCENDING);
+                                    queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).whereEqualTo("status","Concluido").orderBy("dataInicio", Query.Direction.ASCENDING);
+                                    registrosUsuario(admin, idUsuario);
+                                    registrosGeral(admin, idUsuario);
+                                    estadoFiltroStatus = 3;
+                                    estadoFiltroData = 0;
+                                    estadoFiltroOrdem = 0;
+                                    filtroStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_status_concluido, null);
+                                    filtroData.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
+                                    filtroOrdem.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
                                     break;
-                                case 3: //Mudança de estado concluido para inicial
-
+                                case 3:
+                                    //Mudança de estado concluido para inicial
+                                    queryOutros = database.collection("registro").orderBy("dataInicio", Query.Direction.ASCENDING);
+                                    queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).orderBy("dataInicio", Query.Direction.ASCENDING);
+                                    estadoFiltroStatus = 0;
+                                    estadoFiltroData = 0;
+                                    estadoFiltroOrdem = 0;
+                                    filtroStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_status_padrao, null);
+                                    filtroData.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
+                                    filtroOrdem.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
                                     break;
                             }
                         }
@@ -185,14 +252,44 @@ public class OcorrenciasActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             switch (estadoFiltroOrdem) {
-                                case 0: //Mudança de estado inicial para crescente
-
+                                case 0:
+                                    //Mudança de estado inicial para crescente
+                                    queryOutros = database.collection("registro").orderBy("bairro", Query.Direction.ASCENDING);
+                                    queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).orderBy("bairro", Query.Direction.ASCENDING);
+                                    registrosUsuario(admin, idUsuario);
+                                    registrosGeral(admin, idUsuario);
+                                    estadoFiltroOrdem = 1;
+                                    estadoFiltroStatus = 0;
+                                    estadoFiltroData = 0;
+                                    filtroOrdem.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_recolher, null);
+                                    filtroStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_status_padrao, null);
+                                    filtroData.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
                                     break;
-                                case 1: //Mudança de estado crescente para decrescente
-
+                                case 1:
+                                    //Mudança de estado crescente para decrescente
+                                    queryOutros = database.collection("registro").orderBy("bairro", Query.Direction.DESCENDING);
+                                    queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).orderBy("bairro", Query.Direction.DESCENDING);
+                                    registrosUsuario(admin, idUsuario);
+                                    registrosGeral(admin, idUsuario);
+                                    estadoFiltroOrdem = 2;
+                                    estadoFiltroStatus = 0;
+                                    estadoFiltroData = 0;
+                                    filtroOrdem.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_expandir, null);
+                                    filtroStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_status_padrao, null);
+                                    filtroData.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
                                     break;
-                                case 2: //Mudança de estado descrescente para inicial
-
+                                case 2:
+                                    //Mudança de estado descrescente para inicial
+                                    queryOutros = database.collection("registro").orderBy("dataInicio", Query.Direction.ASCENDING);
+                                    queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).orderBy("dataInicio", Query.Direction.ASCENDING);
+                                    registrosUsuario(admin, idUsuario);
+                                    registrosGeral(admin, idUsuario);
+                                    estadoFiltroOrdem = 0;
+                                    estadoFiltroStatus = 0;
+                                    estadoFiltroData = 0;
+                                    filtroOrdem.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
+                                    filtroStatus.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_status_padrao, null);
+                                    filtroData.setCompoundDrawablesWithIntrinsicBounds(null, null, ic_seta_up_down, null);
                                     break;
                             }
                         }
@@ -203,19 +300,54 @@ public class OcorrenciasActivity extends AppCompatActivity {
     }
 
     private void registrosUsuario(Boolean admin, String idUsuario) {
+        clearArrays();
         queryUsuario.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d("teste",""+document.getString("dataInicio"));
+                        if (document.getBoolean("validacao")) {
+                            idOcorrencia.add(document.getId());
+                            nomeBairro.add(document.getString("bairro"));
+                            textoStatus.add(document.getString("situacao"));
+                            dataInicio.add(document.getString("dataInicio"));
+                            dataFim.add(document.getString("dataFim"));
+                            if (admin) {
+                                descricao.add(document.getString("descricao"));
+                                nomeResponsavel.add(document.getString("nomeResponsavel"));
+                            } else {
+                                descricao.add(null);
+                                nomeResponsavel.add(null);
+                            }
+                            pathReference = storageRef.child(document.getId() + "/" + document.getId() + "_antes.jpg");
+                            pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    fotoAntes.add(String.valueOf(uri));
+                                    Log.d("teste","" + fotoAntes.size());
+                                    myAdapter.notifyDataSetChanged();
+                                }
+                            });
+                        }
                     }
+                    myAdapter.notifyDataSetChanged();
                 } else {
                     Log.d("erro", "Error getting documents.", task.getException());
                 }
-
             }
         });
+    }
+
+    private void clearArrays() {
+        idOcorrencia.clear();
+        nomeBairro.clear();
+        textoStatus.clear();
+        dataInicio.clear();
+        dataFim.clear();
+        fotoAntes.clear();
+        fotoDepois.clear();
+        descricao.clear();
+        nomeResponsavel.clear();
     }
 
     private void registrosGeral(Boolean admin, String idUsuario) {
@@ -224,7 +356,7 @@ public class OcorrenciasActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.d("teste",""+document.getString("dataInicio"));
+
                     }
                 } else {
                     Log.d("erro", "Error getting documents.", task.getException());

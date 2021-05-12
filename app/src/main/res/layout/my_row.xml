@@ -38,7 +38,7 @@
                 app:layout_constraintVertical_bias="0.0">
 
                 <TextView
-                    android:id="@+id/textNomeRua"
+                    android:id="@+id/textNomeBairro"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -50,16 +50,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/textNomeBairro"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Jardim Regina"
-                    android:textColor="@color/orange"
-                    app:layout_constraintStart_toStartOf="@+id/textNomeRua"
-                    app:layout_constraintTop_toBottomOf="@+id/textNomeRua" />
-
                 <Spinner
                     android:id="@+id/spinnerStatus"
                     android:layout_width="wrap_content"
@@ -68,20 +58,35 @@
                     app:layout_constraintStart_toStartOf="@id/textNomeBairro"
                     app:layout_constraintTop_toBottomOf="@id/textNomeBairro" />
 
+                <Button
+                    android:id="@+id/buttonAvaliar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Avaliar"
+                    android:textSize="12sp"
+                    android:background="@drawable/rounded_borders"
+                    app:backgroundTint="@color/orange"
+                    android:visibility="visible"
+                    app:layout_constraintStart_toStartOf="@id/spinnerStatus"
+                    app:layout_constraintTop_toBottomOf="@id/spinnerStatus" />
+
                 <TextView
+                    android:id="@+id/verNoMapa"
                     android:layout_width="100dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
                     android:clickable="true"
                     android:drawableEnd="@drawable/ic_marker"
                     android:drawableRight="@drawable/ic_marker"
-                    android:drawableTint="@color/orange"
                     android:gravity="center"
                     android:text="Mapa"
                     android:textColor="@color/orange"
-                    android:textSize="18dp"
+                    android:textSize="18sp"
                     app:backgroundTint="@color/orange"
+                    app:drawableTint="@color/orange"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -90,11 +95,12 @@
                     android:id="@+id/buttonExpandirOcorrencias"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
                     android:background="@drawable/ic_expand_more"
                     app:backgroundTint="@color/orange"
-                    app:layout_constraintBottom_toBottomOf="@+id/spinnerStatus"
+                    app:layout_constraintTop_toBottomOf="@+id/verNoMapa"
                     app:layout_constraintEnd_toEndOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

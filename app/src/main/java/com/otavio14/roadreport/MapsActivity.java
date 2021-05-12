@@ -60,6 +60,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //bloqueia o modo escuro
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
+        if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
+        }
+
         fabMenuFechado = findViewById(R.id.menu_fechado);
         efabVerOcorrencias = findViewById(R.id.ver_ocorrencias);
         efabSair = findViewById(R.id.sair);
