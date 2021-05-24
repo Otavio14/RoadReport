@@ -114,7 +114,7 @@ public class RegistrarOcorrenciaActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (TextUtils.isEmpty(editDescricao.getText().toString()) || mImageUri == null || !local) {
-                    Toast.makeText(getApplicationContext(), "Preencha todos os campos", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Preencha todos os campos", Toast.LENGTH_SHORT).show();
                 } else {
                     //Data atual do sistema
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -137,7 +137,7 @@ public class RegistrarOcorrenciaActivity extends AppCompatActivity {
                                 public void onSuccess(DocumentReference documentReference) {
                                     storageRef = FirebaseStorage.getInstance().getReference(documentReference.getId());
                                     upload(documentReference.getId());
-                                    Intent intent = new Intent(RegistrarOcorrenciaActivity.this, MapsActivity.class);
+                                    Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
                                     startActivity(intent);
                                 }
                             })

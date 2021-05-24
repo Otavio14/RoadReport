@@ -5,15 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+    <ImageButton
+        android:id="@+id/imageButtonConcluir"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_marginTop="16dp"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toTopOf="@+id/buttonConcluir"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editDescricao"
+        app:layout_constraintTop_toBottomOf="@+id/editConcluirDescricao"
         app:srcCompat="@drawable/ic_photo" />
 
     <Button
@@ -27,10 +28,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/imageButtonConcluir" />
 
     <EditText
-        android:id="@+id/editTextResponsavel"
+        android:id="@+id/editResponsavel"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -38,14 +39,14 @@
         android:ems="10"
         android:hint="Nome do responsável"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/editDescricao"
+        app:layout_constraintBottom_toTopOf="@+id/editConcluirDescricao"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <EditText
-        android:id="@+id/editDescricao"
+        android:id="@+id/editConcluirDescricao"
         android:layout_width="300dp"
         android:layout_height="250dp"
         android:layout_marginTop="16dp"
@@ -54,10 +55,10 @@
         android:gravity="start|top"
         android:hint="Descrição"
         android:inputType="textMultiLine"
-        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        app:layout_constraintBottom_toTopOf="@+id/imageButtonConcluir"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextResponsavel" />
+        app:layout_constraintTop_toBottomOf="@+id/editResponsavel" />
 
     <TextView
         android:id="@+id/textView4"
@@ -67,7 +68,7 @@
         android:text="Concluir Ocorrência"
         android:textColor="@color/orange"
         android:textSize="25sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextResponsavel"
+        app:layout_constraintBottom_toTopOf="@+id/editResponsavel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
