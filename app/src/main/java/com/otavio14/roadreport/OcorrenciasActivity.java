@@ -33,7 +33,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -58,6 +57,8 @@ public class OcorrenciasActivity extends AppCompatActivity {
 
     boolean admin;
     String idUsuario;
+    ArrayList<Boolean> ocorrenciaUsuario = new ArrayList<>();
+    ArrayList<Boolean> ocorrenciaAvaliada = new ArrayList<>();
 
     RecyclerView recyclerView;
     MyAdapter myAdapter;
@@ -101,11 +102,13 @@ public class OcorrenciasActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerView);
 
+        //Verifica se o usuário atual é admin
         SharedPreferences sharedPreferences = getSharedPreferences("shared_preferences", Context.MODE_PRIVATE);
         admin = false;
         admin = sharedPreferences.getBoolean("administrador_key", admin);
         idUsuario = sharedPreferences.getString("idUsuario_key", "");
 
+        //Queries para a pesquisa das ocorrências
         queryOutros = database.collection("registro").orderBy("dataInicio", Query.Direction.ASCENDING);
         queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).orderBy("dataInicio", Query.Direction.ASCENDING);
 
@@ -113,7 +116,7 @@ public class OcorrenciasActivity extends AppCompatActivity {
         registrosGeral(admin, idUsuario);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        myAdapter = new MyAdapter(this, nomeBairro, textoStatus, iconeStatus, dataInicio, dataFim, fotoAntes, fotoDepois, descricao, nomeResponsavel);
+        myAdapter = new MyAdapter(this, nomeBairro, textoStatus, iconeStatus, dataInicio, dataFim, fotoAntes, fotoDepois, descricao, nomeResponsavel, idOcorrencia, ocorrenciaUsuario, admin, ocorrenciaAvaliada);
         recyclerView.setAdapter(myAdapter);
 
         botaoExpandir.setOnClickListener(new View.OnClickListener() {
@@ -196,8 +199,8 @@ public class OcorrenciasActivity extends AppCompatActivity {
                             switch (estadoFiltroStatus) {
                                 case 0:
                                     //Mudança de estado inicial para em espera
-                                    queryOutros = database.collection("registro").whereEqualTo("status","Em espera").orderBy("dataInicio", Query.Direction.DESCENDING);
-                                    queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).whereEqualTo("status","Em espera").orderBy("dataInicio", Query.Direction.DESCENDING);
+                                    queryOutros = database.collection("registro").whereEqualTo("situacao", "Em espera").orderBy("dataInicio", Query.Direction.DESCENDING);
+                                    queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).whereEqualTo("situacao", "Em espera").orderBy("dataInicio", Query.Direction.DESCENDING);
                                     registrosUsuario(admin, idUsuario);
                                     registrosGeral(admin, idUsuario);
                                     estadoFiltroStatus = 1;
@@ -209,8 +212,8 @@ public class OcorrenciasActivity extends AppCompatActivity {
                                     break;
                                 case 1:
                                     //Mudança de estado em espera para em andamento
-                                    queryOutros = database.collection("registro").whereEqualTo("status","Em andamento").orderBy("bairro", Query.Direction.ASCENDING);
-                                    queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).whereEqualTo("status","Em andamento").orderBy("dataInicio", Query.Direction.ASCENDING);
+                                    queryOutros = database.collection("registro").whereEqualTo("situacao", "Em andamento").orderBy("bairro", Query.Direction.ASCENDING);
+                                    queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).whereEqualTo("situacao", "Em andamento").orderBy("dataInicio", Query.Direction.ASCENDING);
                                     registrosUsuario(admin, idUsuario);
                                     registrosGeral(admin, idUsuario);
                                     estadoFiltroStatus = 2;
@@ -222,8 +225,8 @@ public class OcorrenciasActivity extends AppCompatActivity {
                                     break;
                                 case 2:
                                     //Mudança de estado em andamento para concluido
-                                    queryOutros = database.collection("registro").whereEqualTo("status","Concluido").orderBy("dataInicio", Query.Direction.ASCENDING);
-                                    queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).whereEqualTo("status","Concluido").orderBy("dataInicio", Query.Direction.ASCENDING);
+                                    queryOutros = database.collection("registro").whereEqualTo("situacao", "Concluido").orderBy("dataInicio", Query.Direction.ASCENDING);
+                                    queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).whereEqualTo("situacao", "Concluido").orderBy("dataInicio", Query.Direction.ASCENDING);
                                     registrosUsuario(admin, idUsuario);
                                     registrosGeral(admin, idUsuario);
                                     estadoFiltroStatus = 3;
@@ -237,6 +240,8 @@ public class OcorrenciasActivity extends AppCompatActivity {
                                     //Mudança de estado concluido para inicial
                                     queryOutros = database.collection("registro").orderBy("dataInicio", Query.Direction.ASCENDING);
                                     queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).orderBy("dataInicio", Query.Direction.ASCENDING);
+                                    registrosUsuario(admin, idUsuario);
+                                    registrosGeral(admin, idUsuario);
                                     estadoFiltroStatus = 0;
                                     estadoFiltroData = 0;
                                     estadoFiltroOrdem = 0;
@@ -307,24 +312,24 @@ public class OcorrenciasActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         if (document.getBoolean("validacao")) {
+                            if(document.getBoolean("avaliado")) {
+                                ocorrenciaAvaliada.add(true);
+                            } else {
+                                ocorrenciaAvaliada.add(false);
+                            }
+                            ocorrenciaUsuario.add(true);
                             idOcorrencia.add(document.getId());
                             nomeBairro.add(document.getString("bairro"));
                             textoStatus.add(document.getString("situacao"));
                             dataInicio.add(document.getString("dataInicio"));
                             dataFim.add(document.getString("dataFim"));
-                            if (admin) {
-                                descricao.add(document.getString("descricao"));
-                                nomeResponsavel.add(document.getString("nomeResponsavel"));
-                            } else {
-                                descricao.add(null);
-                                nomeResponsavel.add(null);
-                            }
+                            descricao.add(document.getString("descricao"));
+                            nomeResponsavel.add(document.getString("nomeResponsavel"));
                             pathReference = storageRef.child(document.getId() + "/" + document.getId() + "_antes.jpg");
                             pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     fotoAntes.add(String.valueOf(uri));
-                                    Log.d("teste","" + fotoAntes.size());
                                     myAdapter.notifyDataSetChanged();
                                 }
                             });
@@ -339,6 +344,7 @@ public class OcorrenciasActivity extends AppCompatActivity {
     }
 
     private void clearArrays() {
+        //posicaoFinalUsuario = 0;
         idOcorrencia.clear();
         nomeBairro.clear();
         textoStatus.clear();
@@ -348,6 +354,8 @@ public class OcorrenciasActivity extends AppCompatActivity {
         fotoDepois.clear();
         descricao.clear();
         nomeResponsavel.clear();
+        ocorrenciaAvaliada.clear();
+        ocorrenciaUsuario.clear();
     }
 
     private void registrosGeral(Boolean admin, String idUsuario) {
@@ -356,12 +364,36 @@ public class OcorrenciasActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-
+                        if (document.getString("codUsuario") != idUsuario && document.getBoolean("validacao")) {
+                            if (admin == true || document.getString("situacao") != "Em espera") {
+                                ocorrenciaUsuario.add(false);
+                                ocorrenciaAvaliada.add(false);
+                                idOcorrencia.add(document.getId());
+                                nomeBairro.add(document.getString("bairro"));
+                                textoStatus.add(document.getString("situacao"));
+                                dataInicio.add(document.getString("dataInicio"));
+                                dataFim.add(document.getString("dataFim"));
+                                if (admin) {
+                                    descricao.add(document.getString("descricao"));
+                                    nomeResponsavel.add(document.getString("nomeResponsavel"));
+                                } else {
+                                    descricao.add(null);
+                                    nomeResponsavel.add(null);
+                                }
+                                pathReference = storageRef.child(document.getId() + "/" + document.getId() + "_antes.jpg");
+                                pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        fotoAntes.add(String.valueOf(uri));
+                                        myAdapter.notifyDataSetChanged();
+                                    }
+                                });
+                            }
+                        }
                     }
                 } else {
                     Log.d("erro", "Error getting documents.", task.getException());
                 }
-
             }
         });
     }

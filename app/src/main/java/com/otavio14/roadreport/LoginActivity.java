@@ -82,6 +82,9 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Realiza o login no Firebase
+     */
     public void logar() {
         mAuth.signInWithEmailAndPassword(editEmailLogin.getText().toString(), editSenhaLogin.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -131,7 +134,5 @@ public class LoginActivity extends AppCompatActivity {
 
     //Desabilita o botão voltar
     @Override
-    public void onBackPressed() {
-
-    }
+    public void onBackPressed() { }
 }

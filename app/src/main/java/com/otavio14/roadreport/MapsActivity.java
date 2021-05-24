@@ -137,9 +137,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //Desabilita o botão voltar
     @Override
-    public void onBackPressed() {
-
-    }
+    public void onBackPressed() { }
 
     /**
      * Manipulates the map once available.
@@ -171,6 +169,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapsMarker();
     }
 
+    /**
+     * Adiciona os marcadores conforme o status da ocorrência
+     */
     private void mapsMarker() {
         database.collection("registro").whereEqualTo("validacao",true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

@@ -1,8 +1,9 @@
 package com.otavio14.roadreport;
 
+import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.transition.AutoTransition;
 import android.transition.TransitionManager;
@@ -10,20 +11,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -41,12 +44,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     ArrayList<StorageReference> fotoDepois = new ArrayList<>();
     ArrayList<String> descricao = new ArrayList<>();
     ArrayList<String> nomeResponsavel = new ArrayList<>();
+    ArrayList<String> idOcorrencia = new ArrayList<>();
+    ArrayList<Boolean> ocorrenciaUsuario;
+    ArrayList<Boolean> ocorrenciaAvaliada;
+    boolean admin;
+    FirebaseFirestore database = FirebaseFirestore.getInstance();
 
     public MyAdapter(Context ct, ArrayList<String> p_nomeBairro,
                      ArrayList<String> p_textStatus, ArrayList<Integer> p_iconeStatus, ArrayList<String> p_dataInicio,
                      ArrayList<String> p_dataFim, ArrayList<String> p_fotoAntes,
                      ArrayList<StorageReference> p_fotoDepois, ArrayList<String> p_descricao,
-                     ArrayList<String> p_nomeResponsavel) {
+                     ArrayList<String> p_nomeResponsavel, ArrayList<String> p_idOcorrencia, ArrayList<Boolean> p_ocorrenciaUsuario,
+                     boolean p_admin, ArrayList<Boolean> p_ocorrenciaAvaliada) {
         context = ct;
         nomeBairro = p_nomeBairro;
         textoStatus = p_textStatus;
@@ -57,6 +66,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         fotoDepois = p_fotoDepois;
         descricao = p_descricao;
         nomeResponsavel = p_nomeResponsavel;
+        idOcorrencia = p_idOcorrencia;
+        ocorrenciaUsuario = p_ocorrenciaUsuario;
+        admin = p_admin;
+        ocorrenciaAvaliada = p_ocorrenciaAvaliada;
     }
 
     @NonNull
@@ -87,16 +100,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             holder.nomeResponsavel.setText("Nome do Responsável");
         }
 
-        if(position < fotoAntes.size()) {
-            Log.d("teste", "Array: " + fotoAntes.size() + " Posição: " + position);
+        if (position < fotoAntes.size()) {
             Glide.with(context).load(fotoAntes.get(position)).into(holder.fotoAntes);
         }
 
-        /*if (fotoDepois.get(position) != null) {
-            //holder.fotoDepois.setImageResource(fotoDepois.get(position));
-        } else {
-            //holder.fotoDepois.setImageResource(fotoDepois.get(position));
-        }*/
+        holder.spinnerStatus.setOnItemSelectedListener(null);
         //Spinner do status
         ArrayAdapter<String> adapterStatus = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, opcoesStatus);
         adapterStatus.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -110,9 +118,102 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 break;
             case "Concluido":
                 holder.spinnerStatus.setSelection(3);
+                if (ocorrenciaUsuario.get(position) && ocorrenciaAvaliada.get(position) == false) {
+                    holder.buttonAvaliar.setVisibility(View.VISIBLE);
+                }
                 break;
         }
 
+        holder.spinnerStatus.setEnabled(false);
+        if (admin) {
+            holder.spinnerStatus.setEnabled(true);
+            holder.descricao.setVisibility(View.VISIBLE);
+            holder.nomeResponsavel.setVisibility(View.VISIBLE);
+        }
+
+        if (ocorrenciaUsuario.get(position)) {
+            holder.descricao.setVisibility(View.VISIBLE);
+            holder.nomeResponsavel.setVisibility(View.VISIBLE);
+        }
+
+        holder.spinnerStatus.post(new Runnable() {
+            @Override
+            public void run() {
+                holder.spinnerStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int p_position, long id) {
+                        switch (p_position) {
+                            case 0:
+                                if (!textoStatus.get(position).equals("Concluido")) {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                    builder.setCancelable(true);
+                                    builder.setTitle("Confirmar invalidação");
+                                    builder.setMessage("Deseja invalidar a ocorrência para uma futura avaliação?");
+                                    builder.setPositiveButton("Sim",
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    database.collection("registro").document(idOcorrencia.get(position)).update("validacao", false);
+                                                }
+                                            });
+                                    builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            notifyDataSetChanged();
+                                        }
+                                    });
+                                    AlertDialog dialog = builder.create();
+                                    dialog.show();
+                                } else {
+                                    notifyDataSetChanged();
+                                    Toast.makeText(context, "Seleção incorreta", Toast.LENGTH_SHORT).show();
+                                }
+                                break;
+                            case 1:
+                                if (!textoStatus.get(position).equals("Concluido") && !textoStatus.get(position).equals("Em espera")) {
+                                    database.collection("registro").document(idOcorrencia.get(position)).update("situacao", "Em espera");
+                                } else {
+                                    Toast.makeText(context, "Seleção incorreta", Toast.LENGTH_SHORT).show();
+                                    notifyDataSetChanged();
+                                }
+                                break;
+                            case 2:
+                                if (!textoStatus.get(position).equals("Concluido") && !textoStatus.get(position).equals("Em andamento")) {
+                                    database.collection("registro").document(idOcorrencia.get(position)).update("situacao", "Em andamento");
+                                } else {
+                                    notifyDataSetChanged();
+                                    Toast.makeText(context, "Seleção incorreta", Toast.LENGTH_SHORT).show();
+                                }
+                                break;
+                            case 3:
+                                if (!textoStatus.get(position).equals("Concluido")) {
+                                    Intent intent = new Intent(context, ConcluirOcorrenciaActivity.class);
+                                    intent.putExtra("ID_OCORRENCIA", idOcorrencia.get(position));
+                                    context.startActivity(intent);
+                                } else {
+                                    notifyDataSetChanged();
+                                    Toast.makeText(context, "Seleção incorreta", Toast.LENGTH_SHORT).show();
+                                }
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+            }
+        });
+
+        holder.buttonAvaliar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, AvaliarActivity.class);
+                intent.putExtra("ID_OCORRENCIA", idOcorrencia.get(position));
+                context.startActivity(intent);
+            }
+        });
 
         holder.buttonExpandirOcorrencias.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -151,10 +252,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView nomeRua, nomeBairro, dataInicio, dataFim, dataInicioValor, dataFimValor, descricao, nomeResponsavel;
+        TextView nomeBairro, dataInicioValor, dataFimValor, descricao, nomeResponsavel;
         ImageView fotoAntes, fotoDepois;
         CardView cardView;
-        Button buttonExpandirOcorrencias;
+        Button buttonExpandirOcorrencias, buttonAvaliar;
         ConstraintLayout hiddenViewOcorrencias;
         Spinner spinnerStatus;
 
@@ -169,6 +270,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             descricao = itemView.findViewById(R.id.textDescricao);
             nomeResponsavel = itemView.findViewById(R.id.textResponsavel);
             spinnerStatus = itemView.findViewById(R.id.spinnerStatus);
+            buttonAvaliar = itemView.findViewById(R.id.buttonAvaliar);
 
             cardView = itemView.findViewById(R.id.base_cardview_ocorrencias);
             buttonExpandirOcorrencias = itemView.findViewById(R.id.buttonExpandirOcorrencias);

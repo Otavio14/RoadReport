@@ -128,6 +128,7 @@ public class RegistrarOcorrenciaActivity extends AppCompatActivity {
                     registro.put("descricao", editDescricao.getText().toString());
                     registro.put("situacao", "Em espera");
                     registro.put("validacao", true);
+                    registro.put("avaliado", false);
 
                     database.collection("registro")
                             .add(registro)
@@ -143,7 +144,7 @@ public class RegistrarOcorrenciaActivity extends AppCompatActivity {
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.w("teste", "Error adding document", e);
+                                    Log.d("erro", "Error adding document", e);
                                 }
                             });
                 }
@@ -161,6 +162,9 @@ public class RegistrarOcorrenciaActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Coleta a localização atual do usuário
+     */
     @SuppressLint("MissingPermission")
     private void getLocation() {
         fusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
@@ -186,12 +190,21 @@ public class RegistrarOcorrenciaActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Coleta a extensão da imagem escolhida
+     * @param uri - código da imagem selecionada
+     * @return - retorna a extensão da imagem
+     */
     private String extensaoArquivo(Uri uri) {
         ContentResolver contentResolver = getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
+    /**
+     * Realiza o upload da imagem no Firebase
+     * @param id - ID da ocorrência
+     */
     private void upload(String id) {
         if (mImageUri != null) {
             StorageReference storageReference = storageRef.child(id + "_antes." + extensaoArquivo(mImageUri));

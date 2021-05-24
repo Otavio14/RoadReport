@@ -143,6 +143,11 @@ public class CadastroActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Valida o CPF inserido
+     * @param cpf - cpf inserido
+     * @return - retorna se é valido ou não
+     */
     private boolean validarCpf(String cpf) {
         if (cpf.equals("00000000000") ||
                 cpf.equals("11111111111") ||
@@ -198,6 +203,11 @@ public class CadastroActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Retira a máscara do CPF
+     * @param s - CPF atual
+     * @return - retorna o CPF sem a máscara
+     */
     public static String unmask(final String s) {
         return s.replaceAll("[.]", "").replaceAll("[-]", "").replaceAll("[/]", "").replaceAll("[(]", "").replaceAll("[ ]","").replaceAll("[:]", "").replaceAll("[)]", "");
     }
@@ -225,9 +235,7 @@ public class CadastroActivity extends AppCompatActivity {
 
     //Desabilita o botão voltar
     @Override
-    public void onBackPressed() {
-
-    }
+    public void onBackPressed() { }
 
     /**
      * Insere os dados do cadastro no banco de dados

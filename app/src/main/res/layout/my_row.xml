@@ -63,11 +63,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_marginTop="8dp"
+                    android:background="@drawable/rounded_borders"
                     android:text="Avaliar"
                     android:textSize="12sp"
-                    android:background="@drawable/rounded_borders"
+                    android:visibility="gone"
                     app:backgroundTint="@color/orange"
-                    android:visibility="visible"
                     app:layout_constraintStart_toStartOf="@id/spinnerStatus"
                     app:layout_constraintTop_toBottomOf="@id/spinnerStatus" />
 
@@ -100,8 +100,8 @@
                     android:layout_marginRight="16dp"
                     android:background="@drawable/ic_expand_more"
                     app:backgroundTint="@color/orange"
-                    app:layout_constraintTop_toBottomOf="@+id/verNoMapa"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/verNoMapa" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -187,6 +187,7 @@
                     android:longClickable="false"
                     android:text="Descrição"
                     android:textColor="@color/orange"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="@+id/textFotoDepois"
                     app:layout_constraintHorizontal_bias="0.523"
                     app:layout_constraintStart_toStartOf="@+id/textFotoAntes"
@@ -199,6 +200,7 @@
                     android:layout_marginTop="8dp"
                     android:text="Nome do Responsável"
                     android:textColor="@color/orange"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="@+id/textDescricao"
                     app:layout_constraintStart_toStartOf="@+id/textDescricao"
                     app:layout_constraintTop_toBottomOf="@+id/textDescricao" />

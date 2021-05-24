@@ -10,8 +10,58 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/white"
+        android:visibility="gone"
+        app:cardCornerRadius="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/textMapaOcorrencias"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:text="Nome Bairro"
+                android:textColor="@color/gray" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:text="Fechar" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status: Em espera"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:textColor="@color/gray" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ver Mais"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textMapaOcorrencias"
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_marginStart="24dp"
@@ -45,11 +95,11 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        app:backgroundTint="@color/gray"
         android:clickable="true"
         android:text="Sair"
-        android:visibility="invisible"
         android:textColor="@color/white"
+        android:visibility="invisible"
+        app:backgroundTint="@color/gray"
         app:icon="@drawable/ic_logout"
         app:iconTint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/menu_fechado"
@@ -62,11 +112,11 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        app:backgroundTint="@color/gray"
         android:clickable="true"
-        android:visibility="invisible"
         android:text="Ver Ocorrências"
         android:textColor="@color/white"
+        android:visibility="invisible"
+        app:backgroundTint="@color/gray"
         app:icon="@drawable/ic_relatorio"
         app:iconTint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/sair"
@@ -79,11 +129,11 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        app:backgroundTint="@color/gray"
         android:clickable="true"
-        android:visibility="invisible"
         android:text="Relatar Ocorrência"
         android:textColor="@color/white"
+        android:visibility="invisible"
+        app:backgroundTint="@color/gray"
         app:icon="@drawable/ic_relatar"
         app:iconTint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/ver_ocorrencias"
@@ -96,11 +146,11 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        app:backgroundTint="@color/gray"
         android:clickable="false"
-        android:visibility="invisible"
         android:text="Nome do Usuário"
         android:textColor="@color/white"
+        android:visibility="invisible"
+        app:backgroundTint="@color/gray"
         app:icon="@drawable/ic_usuario"
         app:iconTint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/relatar_ocorrencia"
@@ -111,17 +161,17 @@
         android:layout_width="350dp"
         android:layout_height="60dp"
         android:layout_marginTop="16dp"
-        android:textSize="15sp"
         android:background="@drawable/rounded_borders"
+        android:drawableStart="@drawable/ic_marker"
         android:drawableLeft="@drawable/ic_marker"
         android:drawablePadding="10dp"
         android:gravity="center_vertical"
         android:padding="10dp"
         android:text="Av. Eng. Fábio Barnabé\nIndaiatuba - SP"
         android:textColor="@color/white"
+        android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:drawableStart="@drawable/ic_marker" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
