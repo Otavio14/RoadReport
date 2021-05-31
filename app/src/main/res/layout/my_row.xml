@@ -72,7 +72,7 @@
                     app:layout_constraintTop_toBottomOf="@id/spinnerStatus" />
 
                 <TextView
-                    android:id="@+id/verNoMapa"
+                    android:id="@+id/textVerNoMapa"
                     android:layout_width="100dp"
                     android:layout_height="40dp"
                     android:layout_marginTop="16dp"
@@ -101,7 +101,7 @@
                     android:background="@drawable/ic_expand_more"
                     app:backgroundTint="@color/orange"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/verNoMapa" />
+                    app:layout_constraintTop_toBottomOf="@+id/textVerNoMapa" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

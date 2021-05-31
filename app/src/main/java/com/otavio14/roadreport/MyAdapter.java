@@ -224,6 +224,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             holder.buttonExpandirOcorrencias.setBackgroundResource(R.drawable.ic_expand_less);
         }*/
 
+        holder.textVerNoMapa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, MapsActivity.class);
+                intent.putExtra("ID_OCORRENCIA", idOcorrencia.get(position));
+                context.startActivity(intent);
+            }
+        });
+
         holder.buttonExpandirOcorrencias.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
@@ -261,7 +270,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView nomeBairro, dataInicioValor, dataFimValor, descricao, nomeResponsavel;
+        TextView nomeBairro, dataInicioValor, dataFimValor, descricao, nomeResponsavel, textVerNoMapa;
         ImageView fotoAntes, fotoDepois;
         CardView cardView;
         Button buttonExpandirOcorrencias, buttonAvaliar;
@@ -284,6 +293,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             cardView = itemView.findViewById(R.id.base_cardview_ocorrencias);
             buttonExpandirOcorrencias = itemView.findViewById(R.id.buttonExpandirOcorrencias);
             hiddenViewOcorrencias = itemView.findViewById(R.id.hidden_view_ocorrencias);
+            textVerNoMapa = itemView.findViewById(R.id.textVerNoMapa);
         }
     }
 }

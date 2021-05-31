@@ -194,6 +194,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(localInicial, 12f));
         mapsMarker();
 
+        if (getIntent().getStringExtra("ID_OCORRENCIA") != null) {
+            fabMenuFechado.setImageResource(R.drawable.ic_menu_fechado);
+            fabMenuFechado.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange)));
+            efabSair.hide();
+            efabRelatarOcorrencia.hide();
+            efabVerOcorrencias.hide();
+            efabNomeUsuario.hide();
+            menuStatus = false;
+            cardMapa.setVisibility(View.VISIBLE);
+            database.collection("registro").document(getIntent()
+                    .getStringExtra("ID_OCORRENCIA"))
+                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        LatLng local = new LatLng(Double.parseDouble(document.getString("latitude")), Double.parseDouble(document.getString("longitude")));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(local, 18f));
+                        textCardBairro.setText(document.getString("bairro"));
+                        textCardStatus.setText("Status: "+ document.getString("situacao"));
+                        textCardDataInicio.setText(document.getString("dataInicio"));
+                        if (document.getString("dataFim") != null) {
+                            textCardDataFim.setText(document.getString("dataFim"));
+                            textCardDataFim.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        Log.d("erro", "Error getting documents.", task.getException());
+                    }
+                }
+            });
+        }
+
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(@NonNull Marker marker) {
