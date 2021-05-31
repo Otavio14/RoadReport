@@ -73,6 +73,9 @@ public class OcorrenciasActivity extends AppCompatActivity {
     ArrayList<StorageReference> fotoDepois = new ArrayList<>();
     ArrayList<String> descricao = new ArrayList<>();
     ArrayList<String> nomeResponsavel = new ArrayList<>();
+    ArrayList<Boolean> expandirPosicao = new ArrayList<>();
+
+    boolean primeiraVez = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,8 +119,12 @@ public class OcorrenciasActivity extends AppCompatActivity {
         registrosGeral(admin, idUsuario);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        myAdapter = new MyAdapter(this, nomeBairro, textoStatus, iconeStatus, dataInicio, dataFim, fotoAntes, fotoDepois, descricao, nomeResponsavel, idOcorrencia, ocorrenciaUsuario, admin, ocorrenciaAvaliada);
+        myAdapter = new MyAdapter(this, nomeBairro, textoStatus, iconeStatus, dataInicio, dataFim,
+                                    fotoAntes, fotoDepois, descricao, nomeResponsavel, idOcorrencia,
+                                    ocorrenciaUsuario, admin, ocorrenciaAvaliada, expandirPosicao);
         recyclerView.setAdapter(myAdapter);
+
+        focarPosicao();
 
         botaoExpandir.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -304,6 +311,16 @@ public class OcorrenciasActivity extends AppCompatActivity {
         });
     }
 
+    private void focarPosicao() {
+        if (getIntent().getStringExtra("ID_OCORRENCIA") != null && idOcorrencia.contains(getIntent().getStringExtra("ID_OCORRENCIA")) && primeiraVez) {
+            recyclerView.smoothScrollToPosition(idOcorrencia.indexOf(getIntent().getStringExtra("ID_OCORRENCIA")));
+            expandirPosicao.add(true);
+            primeiraVez = false;
+        } else {
+            expandirPosicao.add(false);
+        }
+    }
+
     private void registrosUsuario(Boolean admin, String idUsuario) {
         clearArrays();
         queryUsuario.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -312,13 +329,14 @@ public class OcorrenciasActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         if (document.getBoolean("validacao")) {
-                            if(document.getBoolean("avaliado")) {
+                            if (document.getBoolean("avaliado")) {
                                 ocorrenciaAvaliada.add(true);
                             } else {
                                 ocorrenciaAvaliada.add(false);
                             }
                             ocorrenciaUsuario.add(true);
                             idOcorrencia.add(document.getId());
+                            focarPosicao();
                             nomeBairro.add(document.getString("bairro"));
                             textoStatus.add(document.getString("situacao"));
                             dataInicio.add(document.getString("dataInicio"));
@@ -356,6 +374,8 @@ public class OcorrenciasActivity extends AppCompatActivity {
         nomeResponsavel.clear();
         ocorrenciaAvaliada.clear();
         ocorrenciaUsuario.clear();
+        expandirPosicao.clear();
+        primeiraVez = true;
     }
 
     private void registrosGeral(Boolean admin, String idUsuario) {
@@ -369,6 +389,7 @@ public class OcorrenciasActivity extends AppCompatActivity {
                                 ocorrenciaUsuario.add(false);
                                 ocorrenciaAvaliada.add(false);
                                 idOcorrencia.add(document.getId());
+                                focarPosicao();
                                 nomeBairro.add(document.getString("bairro"));
                                 textoStatus.add(document.getString("situacao"));
                                 dataInicio.add(document.getString("dataInicio"));
@@ -396,5 +417,11 @@ public class OcorrenciasActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

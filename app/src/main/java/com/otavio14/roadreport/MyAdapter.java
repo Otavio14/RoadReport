@@ -47,6 +47,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     ArrayList<String> idOcorrencia = new ArrayList<>();
     ArrayList<Boolean> ocorrenciaUsuario;
     ArrayList<Boolean> ocorrenciaAvaliada;
+    ArrayList<Boolean> expandirPosicao;
     boolean admin;
     FirebaseFirestore database = FirebaseFirestore.getInstance();
 
@@ -55,7 +56,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                      ArrayList<String> p_dataFim, ArrayList<String> p_fotoAntes,
                      ArrayList<StorageReference> p_fotoDepois, ArrayList<String> p_descricao,
                      ArrayList<String> p_nomeResponsavel, ArrayList<String> p_idOcorrencia, ArrayList<Boolean> p_ocorrenciaUsuario,
-                     boolean p_admin, ArrayList<Boolean> p_ocorrenciaAvaliada) {
+                     boolean p_admin, ArrayList<Boolean> p_ocorrenciaAvaliada, ArrayList<Boolean> p_expandirPosicao) {
         context = ct;
         nomeBairro = p_nomeBairro;
         textoStatus = p_textStatus;
@@ -70,6 +71,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         ocorrenciaUsuario = p_ocorrenciaUsuario;
         admin = p_admin;
         ocorrenciaAvaliada = p_ocorrenciaAvaliada;
+        expandirPosicao = p_expandirPosicao;
     }
 
     @NonNull
@@ -82,6 +84,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        Log.d("teste","Posicao: " + position + " Valor: " + expandirPosicao.get(position));
         holder.nomeBairro.setText(nomeBairro.get(position));
         holder.dataInicioValor.setText(dataInicio.get(position));
         if (dataFim.get(position) != null) {
@@ -214,6 +217,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 context.startActivity(intent);
             }
         });
+
+        /*
+        if (expandirPosicao.get(position)) {
+            holder.hiddenViewOcorrencias.setVisibility(View.VISIBLE);
+            holder.buttonExpandirOcorrencias.setBackgroundResource(R.drawable.ic_expand_less);
+        }*/
 
         holder.buttonExpandirOcorrencias.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)

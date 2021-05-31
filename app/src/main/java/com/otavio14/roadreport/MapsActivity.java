@@ -2,10 +2,12 @@ package com.otavio14.roadreport;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +16,8 @@ import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,6 +25,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,13 +34,16 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
+    TextView textLocalizacao, textCardBairro, textCardStatus, textCardDataInicio, textCardDataFim;
+    Button buttonCardVerMais;
+    CardView cardMapa;
     private GoogleMap mMap;
     ExtendedFloatingActionButton efabSair, efabVerOcorrencias, efabRelatarOcorrencia, efabNomeUsuario;
-    FloatingActionButton fabMenuFechado;
+    FloatingActionButton fabMenuFechado, fabCardFechar;
     boolean menuStatus = false;
 
     FirebaseFirestore database;
@@ -69,6 +77,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         efabSair = findViewById(R.id.sair);
         efabRelatarOcorrencia = findViewById(R.id.relatar_ocorrencia);
         efabNomeUsuario = findViewById(R.id.nome_usuario);
+        textLocalizacao = findViewById(R.id.textLocalizacao);
+        textCardBairro = findViewById(R.id.textCardBairro);
+        textCardStatus = findViewById(R.id.textCardStatus);
+        textCardDataInicio = findViewById(R.id.textCardDataInicio);
+        textCardDataFim = findViewById(R.id.textCardDataFim);
+        buttonCardVerMais = findViewById(R.id.buttonCardVerMais);
+        fabCardFechar = findViewById(R.id.fabCardFechar);
+        cardMapa = findViewById(R.id.cardMapa);
 
         //Insere o nome do usuário no menu
         sharedPreferences.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -76,7 +92,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
                 String[] nome = sharedPreferences.getString("nome_key", "").split(" ");
                 efabNomeUsuario.setText(nome[0]);
-                admin = sharedPreferences.getBoolean("administrador_key",false);
+                admin = sharedPreferences.getBoolean("administrador_key", false);
             }
         });
 
@@ -94,6 +110,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     menuStatus = false;
                 } else {
                     //Exibe o menu
+                    cardMapa.setVisibility(View.GONE);
                     fabMenuFechado.setImageResource(R.drawable.ic_menu_aberto);
                     fabMenuFechado.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.gray)));
                     efabSair.show();
@@ -133,11 +150,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
+
+        fabCardFechar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cardMapa.setVisibility(View.GONE);
+            }
+        });
     }
 
     //Desabilita o botão voltar
     @Override
-    public void onBackPressed() { }
+    public void onBackPressed() {
+    }
 
     /**
      * Manipulates the map once available.
@@ -151,6 +176,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.getUiSettings().setZoomControlsEnabled(false);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -164,31 +191,80 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setMyLocationButtonEnabled(false);
         LatLng localInicial = new LatLng(-23.097395584050947, -47.22833023185295);
-        //mMap.addMarker(new MarkerOptions().position(localInicial)).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(localInicial,12f));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(localInicial, 12f));
         mapsMarker();
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(@NonNull Marker marker) {
+                fabMenuFechado.setImageResource(R.drawable.ic_menu_fechado);
+                fabMenuFechado.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange)));
+                efabSair.hide();
+                efabRelatarOcorrencia.hide();
+                efabVerOcorrencias.hide();
+                efabNomeUsuario.hide();
+                menuStatus = false;
+                cardMapa.setVisibility(View.VISIBLE);
+                database.collection("registro").document(marker.getTag().toString())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    textCardBairro.setText(document.getString("bairro"));
+                                    textCardStatus.setText("Status: "+ document.getString("situacao"));
+                                    textCardDataInicio.setText(document.getString("dataInicio"));
+                                    if (document.getString("dataFim") != null) {
+                                        textCardDataFim.setText(document.getString("dataFim"));
+                                        textCardDataFim.setVisibility(View.VISIBLE);
+                                    }
+                                } else {
+                                    Log.d("erro", "Error getting documents.", task.getException());
+                                }
+                            }
+                        });
+                buttonCardVerMais.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), OcorrenciasActivity.class);
+                        intent.putExtra("ID_OCORRENCIA", marker.getTag().toString());
+                        startActivity(intent);
+                    }
+                });
+                return false;
+            }
+        });
     }
 
     /**
      * Adiciona os marcadores conforme o status da ocorrência
      */
     private void mapsMarker() {
-        database.collection("registro").whereEqualTo("validacao",true).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        database.collection("registro")
+                .whereEqualTo("validacao", true)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot document : task.getResult()) {
-                        if(admin == true && document.getString("situacao").equals("Em espera")) {
+                        if (admin == true && document.getString("situacao").equals("Em espera")) {
                             LatLng latLng1 = new LatLng(Double.parseDouble(document.getString("latitude")), Double.parseDouble(document.getString("longitude")));
-                            mMap.addMarker(new MarkerOptions().position(latLng1)).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                            Marker marker1 = mMap.addMarker(new MarkerOptions().position(latLng1));
+                            marker1.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                            marker1.setTag(document.getId());
                         }
                         if (document.getString("situacao").equals("Em andamento")) {
                             LatLng latLng2 = new LatLng(Double.parseDouble(document.getString("latitude")), Double.parseDouble(document.getString("longitude")));
-                            mMap.addMarker(new MarkerOptions().position(latLng2)).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                            Marker marker2 = mMap.addMarker(new MarkerOptions().position(latLng2));
+                            marker2.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                            marker2.setTag(document.getId());
                         }
                         if (document.getString("situacao").equals("Concluido")) {
                             LatLng latLng3 = new LatLng(Double.parseDouble(document.getString("latitude")), Double.parseDouble(document.getString("longitude")));
-                            mMap.addMarker(new MarkerOptions().position(latLng3)).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                            Marker marker3 = mMap.addMarker(new MarkerOptions().position(latLng3));
+                            marker3.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                            marker3.setTag(document.getId());
                         }
                     }
                 } else {

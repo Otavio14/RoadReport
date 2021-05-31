@@ -11,8 +11,9 @@
         android:layout_height="match_parent" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardMapa"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
         android:layout_marginBottom="24dp"
@@ -28,34 +29,82 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/textCardBairro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="24dp"
                 android:text="Nome Bairro"
-                android:textColor="@color/gray" />
+                android:textColor="@color/gray"
+                android:textSize="20sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <Button
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabCardFechar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginBottom="24dp"
+                app:backgroundTint="@color/orange"
+                app:layout_constraintBottom_toTopOf="@+id/buttonCardVerMais"
                 app:layout_constraintRight_toRightOf="parent"
-                android:text="Fechar" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:maxImageSize="40dp"
+                app:srcCompat="@drawable/ic_menu_aberto"
+                app:tint="@color/white" />
 
             <TextView
+                android:id="@+id/textCardStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
                 android:text="Status: Em espera"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:textColor="@color/gray"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/textCardDataInicio"
                 app:layout_constraintLeft_toLeftOf="parent"
-                android:textColor="@color/gray" />
+                app:layout_constraintTop_toBottomOf="@+id/textCardBairro" />
+
+            <TextView
+                android:id="@+id/textCardDataInicio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:textColor="@color/gray"
+                android:text="Data Início"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/textCardDataFim"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textCardStatus" />
+
+            <TextView
+                android:id="@+id/textCardDataFim"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:text="Data Fim"
+                android:textColor="@color/gray"
+                android:textSize="16sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="24dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textCardDataInicio" />
 
             <Button
+                android:id="@+id/buttonCardVerMais"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ver Mais"
+                android:layout_marginRight="24dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/rounded_borders"
+                android:text="Mais"
+                app:backgroundTint="@color/orange"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fabCardFechar" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

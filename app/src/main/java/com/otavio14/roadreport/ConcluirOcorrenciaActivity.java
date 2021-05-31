@@ -28,6 +28,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -55,7 +57,6 @@ public class ConcluirOcorrenciaActivity extends AppCompatActivity {
     public Map<String, Object> concluir = new HashMap<>();
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,13 +73,17 @@ public class ConcluirOcorrenciaActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (TextUtils.isEmpty(editResponsavel.getText().toString()) ||
-                    TextUtils.isEmpty(editConcluirDescricao.getText().toString()) ||
-                    mImageUri == null) {
+                        TextUtils.isEmpty(editConcluirDescricao.getText().toString()) ||
+                        mImageUri == null) {
                     Toast.makeText(getApplicationContext(), "Preencha todos os campos", Toast.LENGTH_SHORT).show();
                 } else {
-                    concluir.put("nomeResponsavel",editResponsavel.getText().toString());
+                    //Data atual do sistema
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+                    concluir.put("nomeResponsavel", editResponsavel.getText().toString());
                     concluir.put("descricaoConclusao", editConcluirDescricao.getText().toString());
                     concluir.put("situacao", "Concluido");
+                    concluir.put("dataFim", sdf.format(new Date()));
                     storageRef = FirebaseStorage.getInstance().getReference(getIntent().getStringExtra("ID_OCORRENCIA"));
                     database.collection("registro").document(getIntent().getStringExtra("ID_OCORRENCIA")).update(concluir);
                     upload(getIntent().getStringExtra("ID_OCORRENCIA"));
@@ -98,8 +103,10 @@ public class ConcluirOcorrenciaActivity extends AppCompatActivity {
             }
         });
     }
+
     /**
      * Coleta a extensão da imagem escolhida
+     *
      * @param uri - código da imagem selecionada
      * @return - retorna a extensão da imagem
      */
@@ -111,6 +118,7 @@ public class ConcluirOcorrenciaActivity extends AppCompatActivity {
 
     /**
      * Realiza o upload da imagem no Firebase
+     *
      * @param id - ID da ocorrência
      */
     private void upload(String id) {
