@@ -8,6 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.BlendMode;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.GradientDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -27,6 +31,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -95,6 +100,8 @@ public class RegistrarOcorrenciaActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (ActivityCompat.checkSelfPermission(RegistrarOcorrenciaActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    buttonLocalAtual.setBackgroundColor(getResources().getColor(R.color.orange));
+                    buttonEscolherLocal.setBackgroundColor(getResources().getColor(R.color.gray));
                     getLocation();
                 } else {
                     ActivityCompat.requestPermissions(RegistrarOcorrenciaActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
@@ -235,6 +242,8 @@ public class RegistrarOcorrenciaActivity extends AppCompatActivity {
         }
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
+                buttonLocalAtual.setBackgroundColor(getResources().getColor(R.color.gray));
+                buttonEscolherLocal.setBackgroundColor(getResources().getColor(R.color.orange));
                 registro.clear();
                 String result = data.getStringExtra("coord");
                 String coord[] = result.split(",");
