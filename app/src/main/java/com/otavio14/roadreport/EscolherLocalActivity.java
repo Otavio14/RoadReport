@@ -11,6 +11,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 
 import java.io.IOException;
 import java.util.List;
@@ -65,6 +67,21 @@ public class EscolherLocalActivity extends FragmentActivity implements OnMapRead
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            this, R.raw.style_json));
+
+            if (!success) {
+                Log.d("erro", "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.d("erro", "Can't find style. Error: ", e);
+        }
+
         mMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setMyLocationButtonEnabled(true);
         LatLng fiec = new LatLng(-23.097395584050947, -47.22833023185295);

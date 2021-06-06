@@ -123,13 +123,14 @@
 
                 <ImageView
                     android:id="@+id/textFotoAntes"
-                    android:layout_width="180dp"
+                    android:layout_width="0dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_height="150dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginLeft="16dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/styles2"
                     android:gravity="center"
+                    android:maxWidth="180dp"
                     app:layout_constraintEnd_toStartOf="@+id/textFotoDepois"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
@@ -138,13 +139,13 @@
 
                 <ImageView
                     android:id="@+id/textFotoDepois"
-                    android:layout_width="180dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginRight="16dp"
                     android:background="@drawable/styles2"
                     android:gravity="center"
+                    android:maxWidth="180dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/textFotoAntes"
@@ -175,11 +176,9 @@
 
                 <EditText
                     android:id="@+id/textDescricao"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="150dp"
-                    android:layout_marginLeft="16dp"
                     android:layout_marginTop="4dp"
-                    android:layout_marginRight="16dp"
                     android:background="@drawable/styles2"
                     android:ems="10"
                     android:gravity="center"
@@ -189,7 +188,6 @@
                     android:textColor="@color/orange"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="@+id/textFotoDepois"
-                    app:layout_constraintHorizontal_bias="0.523"
                     app:layout_constraintStart_toStartOf="@+id/textFotoAntes"
                     app:layout_constraintTop_toBottomOf="@+id/textFotoAntes" />
 

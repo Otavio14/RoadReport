@@ -13,18 +13,27 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -36,6 +45,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
     TextView textLocalizacao, textCardBairro, textCardStatus, textCardDataInicio, textCardDataFim;
@@ -49,6 +62,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     FirebaseFirestore database;
     SharedPreferences sharedPreferences;
     Boolean admin = false;
+
+    //Variável para acesso a localização atual
+    FusedLocationProviderClient fusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +102,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         fabCardFechar = findViewById(R.id.fabCardFechar);
         cardMapa = findViewById(R.id.cardMapa);
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
         //Insere o nome do usuário no menu
         sharedPreferences.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
@@ -95,6 +113,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 admin = sharedPreferences.getBoolean("administrador_key", false);
             }
         });
+
+        fusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> task) {
+                Location location = task.getResult();
+                if (location != null) {
+                    try {
+                        Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+                        List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                        String endereco[] = addressList.get(0).getAddressLine(0).split("-");
+                        String subEndereco[] = endereco[1].split(",");
+                        String estado[] = endereco[2].split(",");
+                        textLocalizacao.setText(subEndereco[0].trim() + "\n" + subEndereco[1].trim() + " - " + estado[0].trim());
+                    } catch (IOException e) {
+                        Log.w("", "Erro de localização: " + e);
+                    }
+                }
+            }
+        });
+
+        LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+                try {
+                    Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+                    List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                    String endereco[] = addressList.get(0).getAddressLine(0).split("-");
+                    String subEndereco[] = endereco[1].split(",");
+                    textLocalizacao.setText(subEndereco[0].trim() + "\n" + addressList.get(0).getLocality() + " - " + addressList.get(0).getCountryCode());
+                } catch (IOException e) {
+                    Log.w("", "Erro de localização: " + e);
+                }
+            }
+        };
 
         fabMenuFechado.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -188,6 +240,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = googleMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            this, R.raw.style_json));
+
+            if (!success) {
+                Log.d("erro", "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.d("erro", "Can't find style. Error: ", e);
+        }
+
         mMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setMyLocationButtonEnabled(false);
         LatLng localInicial = new LatLng(-23.097395584050947, -47.22833023185295);
@@ -225,6 +292,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             });
         }
+
+
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
