@@ -73,9 +73,7 @@ public class OcorrenciasActivity extends AppCompatActivity {
     ArrayList<StorageReference> fotoDepois = new ArrayList<>();
     ArrayList<String> descricao = new ArrayList<>();
     ArrayList<String> nomeResponsavel = new ArrayList<>();
-    ArrayList<Boolean> expandirPosicao = new ArrayList<>();
-
-    boolean primeiraVez = true;
+    ArrayList<String> expandirPosicao = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,8 +121,6 @@ public class OcorrenciasActivity extends AppCompatActivity {
                                     fotoAntes, fotoDepois, descricao, nomeResponsavel, idOcorrencia,
                                     ocorrenciaUsuario, admin, ocorrenciaAvaliada, expandirPosicao);
         recyclerView.setAdapter(myAdapter);
-
-        focarPosicao();
 
         botaoExpandir.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -312,12 +308,8 @@ public class OcorrenciasActivity extends AppCompatActivity {
     }
 
     private void focarPosicao() {
-        if (getIntent().getStringExtra("ID_OCORRENCIA") != null && idOcorrencia.contains(getIntent().getStringExtra("ID_OCORRENCIA")) && primeiraVez) {
+        if (getIntent().getStringExtra("ID_OCORRENCIA") != null && idOcorrencia.contains(getIntent().getStringExtra("ID_OCORRENCIA"))) {
             recyclerView.smoothScrollToPosition(idOcorrencia.indexOf(getIntent().getStringExtra("ID_OCORRENCIA")));
-            expandirPosicao.add(true);
-            primeiraVez = false;
-        } else {
-            expandirPosicao.add(false);
         }
     }
 
@@ -336,7 +328,6 @@ public class OcorrenciasActivity extends AppCompatActivity {
                             }
                             ocorrenciaUsuario.add(true);
                             idOcorrencia.add(document.getId());
-                            focarPosicao();
                             nomeBairro.add(document.getString("bairro"));
                             textoStatus.add(document.getString("situacao"));
                             dataInicio.add(document.getString("dataInicio"));
@@ -362,7 +353,6 @@ public class OcorrenciasActivity extends AppCompatActivity {
     }
 
     private void clearArrays() {
-        //posicaoFinalUsuario = 0;
         idOcorrencia.clear();
         nomeBairro.clear();
         textoStatus.clear();
@@ -374,8 +364,6 @@ public class OcorrenciasActivity extends AppCompatActivity {
         nomeResponsavel.clear();
         ocorrenciaAvaliada.clear();
         ocorrenciaUsuario.clear();
-        expandirPosicao.clear();
-        primeiraVez = true;
     }
 
     private void registrosGeral(Boolean admin, String idUsuario) {
@@ -389,7 +377,6 @@ public class OcorrenciasActivity extends AppCompatActivity {
                                 ocorrenciaUsuario.add(false);
                                 ocorrenciaAvaliada.add(false);
                                 idOcorrencia.add(document.getId());
-                                focarPosicao();
                                 nomeBairro.add(document.getString("bairro"));
                                 textoStatus.add(document.getString("situacao"));
                                 dataInicio.add(document.getString("dataInicio"));
@@ -412,6 +399,8 @@ public class OcorrenciasActivity extends AppCompatActivity {
                             }
                         }
                     }
+                    focarPosicao();
+                    myAdapter.notifyDataSetChanged();
                 } else {
                     Log.d("erro", "Error getting documents.", task.getException());
                 }
@@ -423,5 +412,13 @@ public class OcorrenciasActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (getIntent().getStringExtra("ID_OCORRENCIA") != null) {
+            expandirPosicao.add(getIntent().getStringExtra("ID_OCORRENCIA"));
+        }
     }
 }

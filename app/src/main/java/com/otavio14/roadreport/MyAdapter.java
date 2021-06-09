@@ -47,7 +47,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     ArrayList<String> idOcorrencia = new ArrayList<>();
     ArrayList<Boolean> ocorrenciaUsuario;
     ArrayList<Boolean> ocorrenciaAvaliada;
-    ArrayList<Boolean> expandirPosicao;
+    ArrayList <String> expandirPosicao;
     boolean admin;
     FirebaseFirestore database = FirebaseFirestore.getInstance();
 
@@ -56,7 +56,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                      ArrayList<String> p_dataFim, ArrayList<String> p_fotoAntes,
                      ArrayList<StorageReference> p_fotoDepois, ArrayList<String> p_descricao,
                      ArrayList<String> p_nomeResponsavel, ArrayList<String> p_idOcorrencia, ArrayList<Boolean> p_ocorrenciaUsuario,
-                     boolean p_admin, ArrayList<Boolean> p_ocorrenciaAvaliada, ArrayList<Boolean> p_expandirPosicao) {
+                     boolean p_admin, ArrayList<Boolean> p_ocorrenciaAvaliada, ArrayList <String> p_expandirPosicao) {
         context = ct;
         nomeBairro = p_nomeBairro;
         textoStatus = p_textStatus;
@@ -84,7 +84,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Log.d("teste","Posicao: " + position + " Valor: " + expandirPosicao.get(position));
         holder.nomeBairro.setText(nomeBairro.get(position));
         holder.dataInicioValor.setText(dataInicio.get(position));
         if (dataFim.get(position) != null) {
@@ -218,11 +217,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         });
 
-        /*
-        if (expandirPosicao.get(position)) {
-            holder.hiddenViewOcorrencias.setVisibility(View.VISIBLE);
-            holder.buttonExpandirOcorrencias.setBackgroundResource(R.drawable.ic_expand_less);
-        }*/
+        if (expandirPosicao.size() > 0) {
+            if (expandirPosicao.get(0).equals(idOcorrencia.get(position))) {
+                holder.hiddenViewOcorrencias.setVisibility(View.VISIBLE);
+                holder.buttonExpandirOcorrencias.setBackgroundResource(R.drawable.ic_expand_less);
+            } else {
+                holder.hiddenViewOcorrencias.setVisibility(View.GONE);
+                holder.buttonExpandirOcorrencias.setBackgroundResource(R.drawable.ic_expand_more);
+            }
+        }
 
         holder.textVerNoMapa.setOnClickListener(new View.OnClickListener() {
             @Override
