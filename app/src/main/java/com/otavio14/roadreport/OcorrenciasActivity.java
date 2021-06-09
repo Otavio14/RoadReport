@@ -372,8 +372,8 @@ public class OcorrenciasActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        if (document.getString("codUsuario") != idUsuario && document.getBoolean("validacao")) {
-                            if (admin == true || document.getString("situacao") != "Em espera") {
+                        if (!document.getString("codUsuario").equals(idUsuario) && document.getBoolean("validacao")) {
+                            if (admin || !document.getString("situacao").equals("Em espera")) {
                                 ocorrenciaUsuario.add(false);
                                 ocorrenciaAvaliada.add(false);
                                 idOcorrencia.add(document.getId());

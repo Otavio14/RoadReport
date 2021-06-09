@@ -91,6 +91,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         } else {
             holder.dataFimValor.setText("Em breve");
         }
+        holder.descricao.setKeyListener(null);
         if (descricao.get(position) != null) {
             holder.descricao.setText(descricao.get(position));
         } else {
@@ -120,10 +121,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                 break;
             case "Concluido":
                 holder.spinnerStatus.setSelection(3);
-                if (ocorrenciaUsuario.get(position) && ocorrenciaAvaliada.get(position) == false) {
-                    holder.buttonAvaliar.setVisibility(View.VISIBLE);
-                }
                 break;
+        }
+
+        if (ocorrenciaUsuario.get(position) && !ocorrenciaAvaliada.get(position) && textoStatus.get(position).equals("Concluido")) {
+            holder.buttonAvaliar.setVisibility(View.VISIBLE);
+        } else {
+            holder.buttonAvaliar.setVisibility(View.GONE);
         }
 
         holder.spinnerStatus.setEnabled(false);
