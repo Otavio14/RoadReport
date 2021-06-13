@@ -1,37 +1,27 @@
 package com.otavio14.roadreport;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -69,38 +59,32 @@ public class ConcluirOcorrenciaActivity extends AppCompatActivity {
         buttonConcluir = findViewById(R.id.buttonConcluir);
         imageButtonConcluir = findViewById(R.id.imageButtonConcluir);
 
-        buttonConcluir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (TextUtils.isEmpty(editResponsavel.getText().toString()) ||
-                        TextUtils.isEmpty(editConcluirDescricao.getText().toString()) ||
-                        mImageUri == null) {
-                    Toast.makeText(getApplicationContext(), "Preencha todos os campos", Toast.LENGTH_SHORT).show();
-                } else {
-                    //Data atual do sistema
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        buttonConcluir.setOnClickListener(v -> {
+            if (TextUtils.isEmpty(editResponsavel.getText().toString()) ||
+                    TextUtils.isEmpty(editConcluirDescricao.getText().toString()) ||
+                    mImageUri == null) {
+                Toast.makeText(getApplicationContext(), "Preencha todos os campos", Toast.LENGTH_SHORT).show();
+            } else {
+                //Data atual do sistema
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
 
-                    concluir.put("nomeResponsavel", editResponsavel.getText().toString());
-                    concluir.put("descricaoConclusao", editConcluirDescricao.getText().toString());
-                    concluir.put("situacao", "Concluido");
-                    concluir.put("dataFim", sdf.format(new Date()));
-                    storageRef = FirebaseStorage.getInstance().getReference(getIntent().getStringExtra("ID_OCORRENCIA"));
-                    database.collection("registro").document(getIntent().getStringExtra("ID_OCORRENCIA")).update(concluir);
-                    upload(getIntent().getStringExtra("ID_OCORRENCIA"));
-                    Intent intent = new Intent(getApplicationContext(), OcorrenciasActivity.class);
-                    startActivity(intent);
-                }
+                concluir.put("nomeResponsavel", editResponsavel.getText().toString());
+                concluir.put("descricaoConclusao", editConcluirDescricao.getText().toString());
+                concluir.put("situacao", "Concluido");
+                concluir.put("dataFim", sdf.format(new Date()));
+                storageRef = FirebaseStorage.getInstance().getReference(getIntent().getStringExtra("ID_OCORRENCIA"));
+                database.collection("registro").document(getIntent().getStringExtra("ID_OCORRENCIA")).update(concluir);
+                upload(getIntent().getStringExtra("ID_OCORRENCIA"));
+                Intent intent = new Intent(getApplicationContext(), OcorrenciasActivity.class);
+                startActivity(intent);
             }
         });
 
-        imageButtonConcluir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent, PICK_IMAGE_REQUEST);
-            }
+        imageButtonConcluir.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(intent, PICK_IMAGE_REQUEST);
         });
     }
 
@@ -125,18 +109,8 @@ public class ConcluirOcorrenciaActivity extends AppCompatActivity {
         if (mImageUri != null) {
             StorageReference storageReference = storageRef.child(id + "_depois." + extensaoArquivo(mImageUri));
             storageReference.putFile(mImageUri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(getApplicationContext(), "Registro enviado", Toast.LENGTH_LONG).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    .addOnSuccessListener(taskSnapshot -> Toast.makeText(getApplicationContext(), "Registro enviado", Toast.LENGTH_LONG).show())
+                    .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show());
         } else {
             Toast.makeText(getApplicationContext(), "Arquivo não selecionado", Toast.LENGTH_SHORT).show();
         }
@@ -149,5 +123,11 @@ public class ConcluirOcorrenciaActivity extends AppCompatActivity {
             mImageUri = data.getData();
             imageButtonConcluir.setImageURI(mImageUri);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

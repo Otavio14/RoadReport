@@ -16,7 +16,8 @@
         app:layout_constraintBottom_toTopOf="@+id/textLocalizacao"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/textLocalizacao"
@@ -28,37 +29,41 @@
         app:layout_constraintBottom_toTopOf="@+id/buttonLocalAtual"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textRegistrarOcorrencia" />
+        app:layout_constraintTop_toBottomOf="@+id/textRegistrarOcorrencia"
+        tools:ignore="HardcodedText" />
 
     <Button
         android:id="@+id/buttonLocalAtual"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:drawableTop="@drawable/ic_local_atual"
-        android:drawableTint="@color/white"
-        android:backgroundTint="@color/gray"
         android:text="Atual"
+        app:backgroundTint="@color/gray"
+        app:drawableTint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/editDescricao"
         app:layout_constraintEnd_toStartOf="@+id/buttonEscolherLocal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textLocalizacao" />
+        app:layout_constraintTop_toBottomOf="@+id/textLocalizacao"
+        tools:ignore="HardcodedText" />
 
     <Button
         android:id="@+id/buttonEscolherLocal"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:drawableTop="@drawable/ic_escolher_local"
-        android:drawableTint="@color/white"
         android:text="Escolher"
         app:backgroundTint="@color/gray"
+        app:drawableTint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/buttonLocalAtual"
-        app:layout_constraintTop_toTopOf="@id/buttonLocalAtual" />
+        app:layout_constraintTop_toTopOf="@id/buttonLocalAtual"
+        tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/editDescricao"
         android:layout_width="300dp"
         android:layout_height="180dp"
+        android:autofillHints=""
         android:background="@drawable/styles2"
         android:ems="10"
         android:gravity="start|top"
@@ -68,20 +73,22 @@
         app:layout_constraintBottom_toTopOf="@+id/imageButtonUpload"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonLocalAtual" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonLocalAtual"
+        tools:ignore="HardcodedText" />
 
     <Button
         android:id="@+id/buttonRegistrar"
         android:layout_width="250dp"
         android:layout_height="60dp"
         android:layout_marginTop="16dp"
-        android:backgroundTint="@color/orange"
         android:text="Registrar"
+        app:backgroundTint="@color/orange"
         app:cornerRadius="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButtonUpload" />
+        app:layout_constraintTop_toBottomOf="@+id/imageButtonUpload"
+        tools:ignore="HardcodedText" />
 
     <ImageButton
         android:id="@+id/imageButtonUpload"
@@ -92,5 +99,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editDescricao"
-        app:srcCompat="@drawable/ic_photo" />
+        app:srcCompat="@drawable/ic_photo"
+        tools:ignore="ContentDescription" />
 </androidx.constraintlayout.widget.ConstraintLayout>

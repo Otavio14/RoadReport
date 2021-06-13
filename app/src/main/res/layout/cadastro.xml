@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Layout referente à tela de cadastro -->
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,96 +10,107 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
+        android:autofillHints=""
         android:background="@drawable/styles"
         android:ems="10"
         android:hint="Nome Completo"
         android:inputType="textPersonName"
-        android:textSize="20dp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/editCpf"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo" />
+        app:layout_constraintTop_toBottomOf="@+id/logo"
+        tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/editCpf"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:autofillHints=""
         android:background="@drawable/styles"
         android:ems="10"
         android:hint="CPF"
         android:inputType="number"
-        android:textSize="20dp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/editTelefone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editNome" />
+        app:layout_constraintTop_toBottomOf="@+id/editNome"
+        tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/editTelefone"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:autofillHints=""
         android:background="@drawable/styles"
         android:ems="10"
-        android:maxLength="13"
         android:hint="Telefone"
         android:inputType="phone"
-        android:textSize="20dp"
+        android:maxLength="13"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/editEmail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editCpf" />
+        app:layout_constraintTop_toBottomOf="@+id/editCpf"
+        tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/editEmail"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:autofillHints=""
         android:background="@drawable/styles"
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
-        android:textSize="20dp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/editSenha"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTelefone" />
+        app:layout_constraintTop_toBottomOf="@+id/editTelefone"
+        tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/editSenha"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:autofillHints=""
         android:background="@drawable/styles"
         android:ems="10"
         android:hint="Senha"
         android:inputType="textPassword"
-        android:textSize="20dp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/buttonCadastrar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/editEmail"
+        tools:ignore="HardcodedText" />
 
     <Button
         android:id="@+id/buttonCadastrar"
         android:layout_width="250dp"
         android:layout_height="60dp"
         android:layout_marginTop="40dp"
-        android:backgroundTint="@color/orange"
         android:text="Cadastrar"
-        android:textSize="15dp"
+        android:textSize="15sp"
+        app:backgroundTint="@color/orange"
         app:cornerRadius="24dp"
         app:layout_constraintBottom_toTopOf="@+id/buttonLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editSenha" />
+        app:layout_constraintTop_toBottomOf="@+id/editSenha"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/logo"
@@ -108,13 +119,14 @@
         android:layout_marginTop="64dp"
         android:text="RoadReport"
         android:textColor="@color/orange"
-        android:textSize="40dp"
+        android:textSize="40sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/editNome"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
 
     <Button
         android:id="@+id/buttonLogin"
@@ -129,7 +141,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonCadastrar" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonCadastrar"
+        tools:ignore="HardcodedText" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,26 +15,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editConcluirDescricao"
-        app:srcCompat="@drawable/ic_photo" />
+        app:srcCompat="@drawable/ic_photo"
+        tools:ignore="ContentDescription" />
 
     <Button
         android:id="@+id/buttonConcluir"
         android:layout_width="250dp"
         android:layout_height="60dp"
         android:layout_marginTop="16dp"
-        android:backgroundTint="@color/orange"
         android:text="Concluir"
+        app:backgroundTint="@color/orange"
         app:cornerRadius="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageButtonConcluir" />
+        app:layout_constraintTop_toBottomOf="@+id/imageButtonConcluir"
+        tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/editResponsavel"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
+        android:autofillHints=""
         android:background="@drawable/styles"
         android:ems="10"
         android:hint="Nome do responsável"
@@ -43,13 +46,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/editConcluirDescricao"
         android:layout_width="300dp"
         android:layout_height="250dp"
         android:layout_marginTop="16dp"
+        android:autofillHints=""
         android:background="@drawable/styles2"
         android:ems="10"
         android:gravity="start|top"
@@ -58,7 +63,8 @@
         app:layout_constraintBottom_toTopOf="@+id/imageButtonConcluir"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editResponsavel" />
+        app:layout_constraintTop_toBottomOf="@+id/editResponsavel"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/textView4"
@@ -72,5 +78,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

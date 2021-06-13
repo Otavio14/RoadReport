@@ -9,34 +9,18 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.InputMismatchException;
-import java.util.List;
 import java.util.Map;
 
 public class CadastroActivity extends AppCompatActivity {
@@ -78,6 +62,7 @@ public class CadastroActivity extends AppCompatActivity {
         editCpf.addTextChangedListener(new TextWatcher() {
             boolean isUpdating;
             String old = "";
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -86,7 +71,7 @@ public class CadastroActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 final String str = unmask(s.toString());
-                String mascara = "";
+                StringBuilder mascara = new StringBuilder();
                 if (isUpdating) {
                     old = str;
                     isUpdating = false;
@@ -95,18 +80,18 @@ public class CadastroActivity extends AppCompatActivity {
                 int i = 0;
                 for (final char m : FORMAT_CPF.toCharArray()) {
                     if (m != '#' && str.length() > old.length()) {
-                        mascara += m;
+                        mascara.append(m);
                         continue;
                     }
                     try {
-                        mascara += str.charAt(i);
+                        mascara.append(str.charAt(i));
                     } catch (final Exception e) {
                         break;
                     }
                     i++;
                 }
                 isUpdating = true;
-                editCpf.setText(mascara);
+                editCpf.setText(mascara.toString());
                 editCpf.setSelection(mascara.length());
             }
 
@@ -116,35 +101,30 @@ public class CadastroActivity extends AppCompatActivity {
             }
         });
 
-        buttonCadastrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Verifica se os campos estão preenchidos
-                if (TextUtils.isEmpty(editCpf.getText().toString()) ||
-                        TextUtils.isEmpty(editEmail.getText().toString()) ||
-                        TextUtils.isEmpty(editNome.getText().toString()) ||
-                        TextUtils.isEmpty(editSenha.getText().toString()) ||
-                        TextUtils.isEmpty(editTelefone.getText().toString()) ||
-                        editSenha.getText().toString().length() < 6 ||
-                        validarCpf(unmask(editCpf.getText().toString())) == false) {
-                    Toast.makeText(getApplicationContext(), "Dados incorretos", Toast.LENGTH_LONG).show();
-                } else {
-                    cadastrarConta();
-                }
+        buttonCadastrar.setOnClickListener(v -> {
+            //Verifica se os campos estão preenchidos
+            if (TextUtils.isEmpty(editCpf.getText().toString()) ||
+                    TextUtils.isEmpty(editEmail.getText().toString()) ||
+                    TextUtils.isEmpty(editNome.getText().toString()) ||
+                    TextUtils.isEmpty(editSenha.getText().toString()) ||
+                    TextUtils.isEmpty(editTelefone.getText().toString()) ||
+                    editSenha.getText().toString().length() < 6 ||
+                    !validarCpf(unmask(editCpf.getText().toString()))) {
+                Toast.makeText(getApplicationContext(), "Dados incorretos", Toast.LENGTH_LONG).show();
+            } else {
+                cadastrarConta();
             }
         });
 
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(CadastroActivity.this, LoginActivity.class);
-                startActivity(intent);
-            }
+        buttonLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(CadastroActivity.this, LoginActivity.class);
+            startActivity(intent);
         });
     }
 
     /**
      * Valida o CPF inserido
+     *
      * @param cpf - cpf inserido
      * @return - retorna se é valido ou não
      */
@@ -156,7 +136,7 @@ public class CadastroActivity extends AppCompatActivity {
                 cpf.equals("66666666666") || cpf.equals("77777777777") ||
                 cpf.equals("88888888888") || cpf.equals("99999999999") ||
                 (cpf.length() != 11))
-            return(false);
+            return (false);
 
         char dig10, dig11;
         int sm, i, r, num, peso;
@@ -166,11 +146,11 @@ public class CadastroActivity extends AppCompatActivity {
             // Calculo do 1o. Digito Verificador
             sm = 0;
             peso = 10;
-            for (i=0; i<9; i++) {
+            for (i = 0; i < 9; i++) {
                 // converte o i-esimo caractere do CPF em um numero:
                 // por exemplo, transforma o caractere '0' no inteiro 0
                 // (48 eh a posicao de '0' na tabela ASCII)
-                num = (int)(cpf.charAt(i) - 48);
+                num = cpf.charAt(i) - 48;
                 sm = sm + (num * peso);
                 peso = peso - 1;
             }
@@ -178,13 +158,13 @@ public class CadastroActivity extends AppCompatActivity {
             r = 11 - (sm % 11);
             if ((r == 10) || (r == 11))
                 dig10 = '0';
-            else dig10 = (char)(r + 48); // converte no respectivo caractere numerico
+            else dig10 = (char) (r + 48); // converte no respectivo caractere numerico
 
             // Calculo do 2o. Digito Verificador
             sm = 0;
             peso = 11;
-            for(i=0; i<10; i++) {
-                num = (int)(cpf.charAt(i) - 48);
+            for (i = 0; i < 10; i++) {
+                num = cpf.charAt(i) - 48;
                 sm = sm + (num * peso);
                 peso = peso - 1;
             }
@@ -192,24 +172,23 @@ public class CadastroActivity extends AppCompatActivity {
             r = 11 - (sm % 11);
             if ((r == 10) || (r == 11))
                 dig11 = '0';
-            else dig11 = (char)(r + 48);
+            else dig11 = (char) (r + 48);
 
             // Verifica se os digitos calculados conferem com os digitos informados.
-            if ((dig10 == cpf.charAt(9)) && (dig11 == cpf.charAt(10)))
-                return(true);
-            else return(false);
+            return (dig10 == cpf.charAt(9)) && (dig11 == cpf.charAt(10));
         } catch (InputMismatchException erro) {
-            return(false);
+            return (false);
         }
     }
 
     /**
      * Retira a máscara do CPF
+     *
      * @param s - CPF atual
      * @return - retorna o CPF sem a máscara
      */
     public static String unmask(final String s) {
-        return s.replaceAll("[.]", "").replaceAll("[-]", "").replaceAll("[/]", "").replaceAll("[(]", "").replaceAll("[ ]","").replaceAll("[:]", "").replaceAll("[)]", "");
+        return s.replaceAll("[.]", "").replaceAll("[-]", "").replaceAll("[/]", "").replaceAll("[(]", "").replaceAll("[ ]", "").replaceAll("[:]", "").replaceAll("[)]", "");
     }
 
     /**
@@ -217,25 +196,23 @@ public class CadastroActivity extends AppCompatActivity {
      */
     private void cadastrarConta() {
         mAuth.createUserWithEmailAndPassword(editEmail.getText().toString(), editSenha.getText().toString())
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("teste", "createUserWithEmail:success");
-                            cadastrarDados();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.d("teste", "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
-                        }
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d("teste", "createUserWithEmail:success");
+                        cadastrarDados();
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.d("teste", "createUserWithEmail:failure", task.getException());
+                        Toast.makeText(getApplicationContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     //Desabilita o botão voltar
     @Override
-    public void onBackPressed() { }
+    public void onBackPressed() {
+    }
 
     /**
      * Insere os dados do cadastro no banco de dados
@@ -249,28 +226,20 @@ public class CadastroActivity extends AppCompatActivity {
         usuario.put("telefone", editTelefone.getText().toString());
         database.collection("usuario")
                 .add(usuario)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        //Inicia uma sessão de login
-                        SharedPreferences sharedPreferences = getSharedPreferences("shared_preferences", Context.MODE_PRIVATE);
-                        //Insere os dados da sessão
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("email_key", editEmail.getText().toString());
-                        editor.putString("senha_key", editSenha.getText().toString());
-                        editor.putBoolean("administrador_key",false);
-                        editor.putString("nome_key", editNome.getText().toString() + " ");
-                        editor.putString("idUsuario_key", documentReference.getId());
-                        editor.apply();
-                        Intent intent = new Intent(CadastroActivity.this, MapsActivity.class);
-                        startActivity(intent);
-                    }
+                .addOnSuccessListener(documentReference -> {
+                    //Inicia uma sessão de login
+                    SharedPreferences sharedPreferences = getSharedPreferences("shared_preferences", Context.MODE_PRIVATE);
+                    //Insere os dados da sessão
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("email_key", editEmail.getText().toString());
+                    editor.putString("senha_key", editSenha.getText().toString());
+                    editor.putBoolean("administrador_key", false);
+                    editor.putString("nome_key", editNome.getText().toString() + " ");
+                    editor.putString("idUsuario_key", documentReference.getId());
+                    editor.apply();
+                    Intent intent = new Intent(CadastroActivity.this, MapsActivity.class);
+                    startActivity(intent);
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("teste", "Error adding document", e);
-                    }
-                });
+                .addOnFailureListener(e -> Log.w("teste", "Error adding document", e));
     }
 }

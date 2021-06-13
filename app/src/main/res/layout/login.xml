@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Layout referente à tela de login -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,6 +10,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="128dp"
+        android:autofillHints=""
         android:background="@drawable/styles"
         android:ems="10"
         android:hint="Email"
@@ -19,37 +19,41 @@
         app:layout_constraintBottom_toTopOf="@+id/editSenhaLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        tools:ignore="HardcodedText" />
 
     <EditText
         android:id="@+id/editSenhaLogin"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
+        android:autofillHints=""
         android:background="@drawable/styles"
         android:ems="10"
         android:hint="Senha"
         android:inputType="textPassword"
-        android:textSize="20dp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/buttonLogar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editEmailLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/editEmailLogin"
+        tools:ignore="HardcodedText" />
 
     <Button
         android:id="@+id/buttonLogar"
         android:layout_width="250dp"
         android:layout_height="60dp"
         android:layout_marginTop="128dp"
-        android:backgroundTint="@color/orange"
         android:text="Logar"
+        app:backgroundTint="@color/orange"
         app:cornerRadius="24dp"
         app:layout_constraintBottom_toTopOf="@+id/buttonCadastro"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editSenhaLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/editSenhaLogin"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/textView2"
@@ -64,7 +68,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
 
     <Button
         android:id="@+id/buttonCadastro"
@@ -77,5 +82,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonLogar" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonLogar"
+        tools:ignore="HardcodedText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,14 +1,8 @@
 package com.otavio14.roadreport;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -17,10 +11,15 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentActivity;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 
@@ -30,14 +29,12 @@ import java.util.Locale;
 
 public class EscolherLocalActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
-    private GoogleMap mMap;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_escolher_local);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
@@ -55,8 +52,7 @@ public class EscolherLocalActivity extends FragmentActivity implements OnMapRead
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -82,11 +78,11 @@ public class EscolherLocalActivity extends FragmentActivity implements OnMapRead
             Log.d("erro", "Can't find style. Error: ", e);
         }
 
-        mMap.setMyLocationEnabled(true);
+        googleMap.setMyLocationEnabled(true);
         googleMap.getUiSettings().setMyLocationButtonEnabled(true);
         LatLng fiec = new LatLng(-23.097395584050947, -47.22833023185295);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fiec,12f));
-        mMap.setOnMapClickListener(this);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fiec, 12f));
+        googleMap.setOnMapClickListener(this);
     }
 
     @Override
@@ -102,26 +98,26 @@ public class EscolherLocalActivity extends FragmentActivity implements OnMapRead
             builder.setTitle("Confirmar Local");
             builder.setMessage("" + address);
             builder.setPositiveButton("Confirmar",
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            String coord = latLng.latitude + "," + latLng.longitude;
-                            Intent returnIntent = new Intent();
-                            returnIntent.putExtra("coord", coord);
-                            setResult(Activity.RESULT_OK,returnIntent);
-                            finish();
-                        }
+                    (dialog, which) -> {
+                        String coord = latLng.latitude + "," + latLng.longitude;
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("coord", coord);
+                        setResult(Activity.RESULT_OK, returnIntent);
+                        finish();
                     });
-            builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                }
+            builder.setNegativeButton("Cancelar", (dialog, which) -> {
             });
 
             AlertDialog dialog = builder.create();
             dialog.show();
         } catch (IOException e) {
-            Log.d("erro","Erro mapa: " + e);
+            Log.d("erro", "Erro mapa: " + e);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

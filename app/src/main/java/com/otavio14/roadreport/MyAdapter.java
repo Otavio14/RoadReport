@@ -1,13 +1,12 @@
 package com.otavio14.roadreport;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.transition.AutoTransition;
 import android.transition.TransitionManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,20 +33,20 @@ import java.util.Arrays;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     Context context;
-    ArrayList<String> nomeBairro = new ArrayList<>();
-    ArrayList<String> textoStatus = new ArrayList<>();
+    ArrayList<String> nomeBairro;
+    ArrayList<String> textoStatus;
     ArrayList<String> opcoesStatus = new ArrayList<>(Arrays.asList("Invalidar", "Em espera", "Em andamento", "Concluído"));
-    ArrayList<Integer> iconeStatus = new ArrayList<>();
-    ArrayList<String> dataInicio = new ArrayList<>();
-    ArrayList<String> dataFim = new ArrayList<>();
-    ArrayList<String> fotoAntes = new ArrayList<>();
-    ArrayList<StorageReference> fotoDepois = new ArrayList<>();
-    ArrayList<String> descricao = new ArrayList<>();
-    ArrayList<String> nomeResponsavel = new ArrayList<>();
-    ArrayList<String> idOcorrencia = new ArrayList<>();
+    ArrayList<Integer> iconeStatus;
+    ArrayList<String> dataInicio;
+    ArrayList<String> dataFim;
+    ArrayList<String> fotoAntes;
+    ArrayList<StorageReference> fotoDepois;
+    ArrayList<String> descricao;
+    ArrayList<String> nomeResponsavel;
+    ArrayList<String> idOcorrencia;
     ArrayList<Boolean> ocorrenciaUsuario;
     ArrayList<Boolean> ocorrenciaAvaliada;
-    ArrayList <String> expandirPosicao;
+    ArrayList<String> expandirPosicao;
     boolean admin;
     FirebaseFirestore database = FirebaseFirestore.getInstance();
 
@@ -56,7 +55,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                      ArrayList<String> p_dataFim, ArrayList<String> p_fotoAntes,
                      ArrayList<StorageReference> p_fotoDepois, ArrayList<String> p_descricao,
                      ArrayList<String> p_nomeResponsavel, ArrayList<String> p_idOcorrencia, ArrayList<Boolean> p_ocorrenciaUsuario,
-                     boolean p_admin, ArrayList<Boolean> p_ocorrenciaAvaliada, ArrayList <String> p_expandirPosicao) {
+                     boolean p_admin, ArrayList<Boolean> p_ocorrenciaAvaliada, ArrayList<String> p_expandirPosicao) {
         context = ct;
         nomeBairro = p_nomeBairro;
         textoStatus = p_textStatus;
@@ -82,6 +81,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         return new MyViewHolder(view);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.nomeBairro.setText(nomeBairro.get(position));
@@ -109,7 +110,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         holder.spinnerStatus.setOnItemSelectedListener(null);
         //Spinner do status
-        ArrayAdapter<String> adapterStatus = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, opcoesStatus);
+        ArrayAdapter<String> adapterStatus = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, opcoesStatus);
         adapterStatus.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         holder.spinnerStatus.setAdapter(adapterStatus);
         switch (textoStatus.get(position)) {
@@ -142,83 +143,65 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             holder.nomeResponsavel.setVisibility(View.VISIBLE);
         }
 
-        holder.spinnerStatus.post(new Runnable() {
+        holder.spinnerStatus.post(() -> holder.spinnerStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void run() {
-                holder.spinnerStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int p_position, long id) {
-                        switch (p_position) {
-                            case 0:
-                                if (!textoStatus.get(position).equals("Concluido")) {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                    builder.setCancelable(true);
-                                    builder.setTitle("Confirmar invalidação");
-                                    builder.setMessage("Deseja invalidar a ocorrência para uma futura avaliação?");
-                                    builder.setPositiveButton("Sim",
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    database.collection("registro").document(idOcorrencia.get(position)).update("validacao", false);
-                                                }
-                                            });
-                                    builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            notifyDataSetChanged();
-                                        }
-                                    });
-                                    AlertDialog dialog = builder.create();
-                                    dialog.show();
-                                } else {
-                                    notifyDataSetChanged();
-                                    Toast.makeText(context, "Seleção incorreta", Toast.LENGTH_SHORT).show();
-                                }
-                                break;
-                            case 1:
-                                if (!textoStatus.get(position).equals("Concluido") && !textoStatus.get(position).equals("Em espera")) {
-                                    database.collection("registro").document(idOcorrencia.get(position)).update("situacao", "Em espera");
-                                } else {
-                                    Toast.makeText(context, "Seleção incorreta", Toast.LENGTH_SHORT).show();
-                                    notifyDataSetChanged();
-                                }
-                                break;
-                            case 2:
-                                if (!textoStatus.get(position).equals("Concluido") && !textoStatus.get(position).equals("Em andamento")) {
-                                    database.collection("registro").document(idOcorrencia.get(position)).update("situacao", "Em andamento");
-                                } else {
-                                    notifyDataSetChanged();
-                                    Toast.makeText(context, "Seleção incorreta", Toast.LENGTH_SHORT).show();
-                                }
-                                break;
-                            case 3:
-                                if (!textoStatus.get(position).equals("Concluido")) {
-                                    Intent intent = new Intent(context, ConcluirOcorrenciaActivity.class);
-                                    intent.putExtra("ID_OCORRENCIA", idOcorrencia.get(position));
-                                    context.startActivity(intent);
-                                } else {
-                                    notifyDataSetChanged();
-                                    Toast.makeText(context, "Seleção incorreta", Toast.LENGTH_SHORT).show();
-                                }
-                                break;
+            public void onItemSelected(AdapterView<?> parent, View view, int p_position, long id) {
+                switch (p_position) {
+                    case 0:
+                        if (!textoStatus.get(position).equals("Concluido")) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setCancelable(true);
+                            builder.setTitle("Confirmar invalidação");
+                            builder.setMessage("Deseja invalidar a ocorrência para uma futura avaliação?");
+                            builder.setPositiveButton("Sim",
+                                    (dialog, which) -> database.collection("registro").document(idOcorrencia.get(position)).update("validacao", false));
+                            builder.setNegativeButton("Não", (dialog, which) -> notifyDataSetChanged());
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+                        } else {
+                            notifyDataSetChanged();
+                            Toast.makeText(context, "Seleção incorreta", Toast.LENGTH_SHORT).show();
                         }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
+                        break;
+                    case 1:
+                        if (!textoStatus.get(position).equals("Concluido") && !textoStatus.get(position).equals("Em espera")) {
+                            database.collection("registro").document(idOcorrencia.get(position)).update("situacao", "Em espera");
+                        } else {
+                            Toast.makeText(context, "Seleção incorreta", Toast.LENGTH_SHORT).show();
+                            notifyDataSetChanged();
+                        }
+                        break;
+                    case 2:
+                        if (!textoStatus.get(position).equals("Concluido") && !textoStatus.get(position).equals("Em andamento")) {
+                            database.collection("registro").document(idOcorrencia.get(position)).update("situacao", "Em andamento");
+                        } else {
+                            notifyDataSetChanged();
+                            Toast.makeText(context, "Seleção incorreta", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case 3:
+                        if (!textoStatus.get(position).equals("Concluido")) {
+                            Intent intent = new Intent(context, ConcluirOcorrenciaActivity.class);
+                            intent.putExtra("ID_OCORRENCIA", idOcorrencia.get(position));
+                            context.startActivity(intent);
+                        } else {
+                            notifyDataSetChanged();
+                            Toast.makeText(context, "Seleção incorreta", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                }
             }
-        });
 
-        holder.buttonAvaliar.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, AvaliarActivity.class);
-                intent.putExtra("ID_OCORRENCIA", idOcorrencia.get(position));
-                context.startActivity(intent);
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
+        }));
+
+        holder.buttonAvaliar.setOnClickListener(v -> {
+            Intent intent = new Intent(context, AvaliarActivity.class);
+            intent.putExtra("ID_OCORRENCIA", idOcorrencia.get(position));
+            context.startActivity(intent);
         });
 
         if (expandirPosicao.size() > 0) {
@@ -231,42 +214,35 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
         }
 
-        holder.textVerNoMapa.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, MapsActivity.class);
-                intent.putExtra("ID_OCORRENCIA", idOcorrencia.get(position));
-                context.startActivity(intent);
-            }
+        holder.textVerNoMapa.setOnClickListener(v -> {
+            Intent intent = new Intent(context, MapsActivity.class);
+            intent.putExtra("ID_OCORRENCIA", idOcorrencia.get(position));
+            context.startActivity(intent);
         });
 
-        holder.buttonExpandirOcorrencias.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onClick(View v) {
-                // If the CardView is already expanded, set its visibility
-                //  to gone and change the expand less icon to expand more.
-                if (holder.hiddenViewOcorrencias.getVisibility() == View.VISIBLE) {
+        holder.buttonExpandirOcorrencias.setOnClickListener(v -> {
+            // If the CardView is already expanded, set its visibility
+            //  to gone and change the expand less icon to expand more.
+            if (holder.hiddenViewOcorrencias.getVisibility() == View.VISIBLE) {
 
-                    // The transition of the hiddenView is carried out
-                    //  by the TransitionManager class.
-                    // Here we use an object of the AutoTransition
-                    // Class to create a default transition.
-                    TransitionManager.beginDelayedTransition(holder.cardView,
-                            new AutoTransition());
-                    holder.hiddenViewOcorrencias.setVisibility(View.GONE);
-                    holder.buttonExpandirOcorrencias.setBackgroundResource(R.drawable.ic_expand_more);
-                }
+                // The transition of the hiddenView is carried out
+                //  by the TransitionManager class.
+                // Here we use an object of the AutoTransition
+                // Class to create a default transition.
+                TransitionManager.beginDelayedTransition(holder.cardView,
+                        new AutoTransition());
+                holder.hiddenViewOcorrencias.setVisibility(View.GONE);
+                holder.buttonExpandirOcorrencias.setBackgroundResource(R.drawable.ic_expand_more);
+            }
 
-                // If the CardView is not expanded, set its visibility
-                // to visible and change the expand more icon to expand less.
-                else {
+            // If the CardView is not expanded, set its visibility
+            // to visible and change the expand more icon to expand less.
+            else {
 
-                    TransitionManager.beginDelayedTransition(holder.cardView,
-                            new AutoTransition());
-                    holder.hiddenViewOcorrencias.setVisibility(View.VISIBLE);
-                    holder.buttonExpandirOcorrencias.setBackgroundResource(R.drawable.ic_expand_less);
-                }
+                TransitionManager.beginDelayedTransition(holder.cardView,
+                        new AutoTransition());
+                holder.hiddenViewOcorrencias.setVisibility(View.VISIBLE);
+                holder.buttonExpandirOcorrencias.setBackgroundResource(R.drawable.ic_expand_less);
             }
         });
     }
@@ -276,7 +252,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         return nomeBairro.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView nomeBairro, dataInicioValor, dataFimValor, descricao, nomeResponsavel, textVerNoMapa;
         ImageView fotoAntes, fotoDepois;
         CardView cardView;

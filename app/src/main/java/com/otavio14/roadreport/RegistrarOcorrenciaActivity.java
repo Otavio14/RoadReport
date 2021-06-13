@@ -8,10 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.BlendMode;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.GradientDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -19,31 +15,22 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -96,76 +83,57 @@ public class RegistrarOcorrenciaActivity extends AppCompatActivity {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        buttonLocalAtual.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ActivityCompat.checkSelfPermission(RegistrarOcorrenciaActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    buttonLocalAtual.setBackgroundColor(getResources().getColor(R.color.orange));
-                    buttonEscolherLocal.setBackgroundColor(getResources().getColor(R.color.gray));
-                    getLocation();
-                } else {
-                    ActivityCompat.requestPermissions(RegistrarOcorrenciaActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
-                }
+        buttonLocalAtual.setOnClickListener(v -> {
+            if (ActivityCompat.checkSelfPermission(RegistrarOcorrenciaActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                buttonLocalAtual.setBackgroundColor(getResources().getColor(R.color.orange));
+                buttonEscolherLocal.setBackgroundColor(getResources().getColor(R.color.gray));
+                getLocation();
+            } else {
+                ActivityCompat.requestPermissions(RegistrarOcorrenciaActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
             }
         });
 
-        buttonEscolherLocal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(RegistrarOcorrenciaActivity.this, EscolherLocalActivity.class);
-                startActivityForResult(i, 1);
+        buttonEscolherLocal.setOnClickListener(v -> {
+            Intent i = new Intent(RegistrarOcorrenciaActivity.this, EscolherLocalActivity.class);
+            startActivityForResult(i, 1);
+        });
+
+        buttonRegistrar.setOnClickListener(v -> {
+            if (TextUtils.isEmpty(editDescricao.getText().toString()) || mImageUri == null || !local) {
+                Toast.makeText(getApplicationContext(), "Preencha todos os campos", Toast.LENGTH_SHORT).show();
+            } else {
+                //Data atual do sistema
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
+                //Recebe o id do usuário logado
+                SharedPreferences sharedPreferences = getSharedPreferences("shared_preferences", Context.MODE_PRIVATE);
+                String idUsuario = sharedPreferences.getString("idUsuario_key", "");
+
+                registro.put("codUsuario", idUsuario);
+                registro.put("dataInicio", sdf.format(new Date()));
+                registro.put("descricao", editDescricao.getText().toString());
+                registro.put("situacao", "Em espera");
+                registro.put("validacao", true);
+                registro.put("avaliado", false);
+
+                database.collection("registro")
+                        .add(registro)
+                        .addOnSuccessListener(documentReference -> {
+                            storageRef = FirebaseStorage.getInstance().getReference(documentReference.getId());
+                            upload(documentReference.getId());
+                            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                            startActivity(intent);
+                            finish();
+                        })
+                        .addOnFailureListener(e -> Log.d("erro", "Error adding document", e));
             }
         });
 
-        buttonRegistrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (TextUtils.isEmpty(editDescricao.getText().toString()) || mImageUri == null || !local) {
-                    Toast.makeText(getApplicationContext(), "Preencha todos os campos", Toast.LENGTH_SHORT).show();
-                } else {
-                    //Data atual do sistema
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
-                    //Recebe o id do usuário logado
-                    SharedPreferences sharedPreferences = getSharedPreferences("shared_preferences", Context.MODE_PRIVATE);
-                    String idUsuario = sharedPreferences.getString("idUsuario_key", "");
-
-                    registro.put("codUsuario", idUsuario);
-                    registro.put("dataInicio", sdf.format(new Date()));
-                    registro.put("descricao", editDescricao.getText().toString());
-                    registro.put("situacao", "Em espera");
-                    registro.put("validacao", true);
-                    registro.put("avaliado", false);
-
-                    database.collection("registro")
-                            .add(registro)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    storageRef = FirebaseStorage.getInstance().getReference(documentReference.getId());
-                                    upload(documentReference.getId());
-                                    Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
-                                    startActivity(intent);
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d("erro", "Error adding document", e);
-                                }
-                            });
-                }
-            }
-        });
-
-        imageButtonUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent, PICK_IMAGE_REQUEST);
-            }
+        imageButtonUpload.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(intent, PICK_IMAGE_REQUEST);
         });
     }
 
@@ -174,24 +142,21 @@ public class RegistrarOcorrenciaActivity extends AppCompatActivity {
      */
     @SuppressLint("MissingPermission")
     private void getLocation() {
-        fusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                Location location = task.getResult();
-                if (location != null) {
-                    try {
-                        Geocoder geocoder = new Geocoder(RegistrarOcorrenciaActivity.this, Locale.getDefault());
-                        List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                        String endereco[] = addressList.get(0).getAddressLine(0).split("-");
-                        String subEndereco[] = endereco[1].split(",");
-                        registro.clear();
-                        registro.put("bairro",subEndereco[0].trim());
-                        registro.put("latitude", String.valueOf(addressList.get(0).getLatitude()));
-                        registro.put("longitude", String.valueOf(addressList.get(0).getLongitude()));
-                        local = true;
-                    } catch (IOException e) {
-                        Log.w("", "Erro de localização: " + e);
-                    }
+        fusedLocationClient.getLastLocation().addOnCompleteListener(task -> {
+            Location location = task.getResult();
+            if (location != null) {
+                try {
+                    Geocoder geocoder = new Geocoder(RegistrarOcorrenciaActivity.this, Locale.getDefault());
+                    List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                    String[] endereco = addressList.get(0).getAddressLine(0).split("-");
+                    String[] subEndereco = endereco[1].split(",");
+                    registro.clear();
+                    registro.put("bairro", subEndereco[0].trim());
+                    registro.put("latitude", String.valueOf(addressList.get(0).getLatitude()));
+                    registro.put("longitude", String.valueOf(addressList.get(0).getLongitude()));
+                    local = true;
+                } catch (IOException e) {
+                    Log.w("", "Erro de localização: " + e);
                 }
             }
         });
@@ -199,6 +164,7 @@ public class RegistrarOcorrenciaActivity extends AppCompatActivity {
 
     /**
      * Coleta a extensão da imagem escolhida
+     *
      * @param uri - código da imagem selecionada
      * @return - retorna a extensão da imagem
      */
@@ -210,24 +176,15 @@ public class RegistrarOcorrenciaActivity extends AppCompatActivity {
 
     /**
      * Realiza o upload da imagem no Firebase
+     *
      * @param id - ID da ocorrência
      */
     private void upload(String id) {
         if (mImageUri != null) {
             StorageReference storageReference = storageRef.child(id + "_antes." + extensaoArquivo(mImageUri));
             storageReference.putFile(mImageUri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(getApplicationContext(), "Registro enviado", Toast.LENGTH_LONG).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    .addOnSuccessListener(taskSnapshot -> Toast.makeText(getApplicationContext(), "Registro enviado", Toast.LENGTH_LONG).show())
+                    .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show());
         } else {
             Toast.makeText(getApplicationContext(), "Arquivo não selecionado", Toast.LENGTH_SHORT).show();
         }
@@ -246,15 +203,15 @@ public class RegistrarOcorrenciaActivity extends AppCompatActivity {
                 buttonEscolherLocal.setBackgroundColor(getResources().getColor(R.color.orange));
                 registro.clear();
                 String result = data.getStringExtra("coord");
-                String coord[] = result.split(",");
+                String[] coord = result.split(",");
                 Geocoder geocoder;
                 List<Address> addresses;
                 geocoder = new Geocoder(this, Locale.getDefault());
                 try {
                     addresses = geocoder.getFromLocation(Double.parseDouble(coord[0]), Double.parseDouble(coord[1]), 1);
-                    String endereco[] = addresses.get(0).getAddressLine(0).split("-");
-                    String subEndereco[] = endereco[1].split(",");
-                    registro.put("bairro",subEndereco[0].trim());
+                    String[] endereco = addresses.get(0).getAddressLine(0).split("-");
+                    String[] subEndereco = endereco[1].split(",");
+                    registro.put("bairro", subEndereco[0].trim());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -262,9 +219,12 @@ public class RegistrarOcorrenciaActivity extends AppCompatActivity {
                 registro.put("longitude", coord[1]);
                 local = true;
             }
-            if (resultCode == Activity.RESULT_CANCELED) {
-                //Write your code if there's no result
-            }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

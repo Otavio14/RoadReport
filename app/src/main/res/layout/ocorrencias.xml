@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -43,18 +44,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="28dp"
                     android:clickable="true"
-                    android:drawableEnd="@drawable/ic_expand_more"
-                    android:drawableRight="@drawable/ic_expand_more"
                     android:drawablePadding="20dp"
                     android:focusable="true"
                     android:text="Filtros"
                     android:textColor="@color/orange"
                     android:textSize="20sp"
                     android:textStyle="bold"
+                    app:drawableEndCompat="@drawable/ic_expand_more"
+                    app:drawableRightCompat="@drawable/ic_expand_more"
                     app:layout_constraintBottom_toBottomOf="@+id/fixed_layout"
                     app:layout_constraintEnd_toEndOf="@+id/fixed_layout"
                     app:layout_constraintStart_toStartOf="@+id/fixed_layout"
-                    app:layout_constraintTop_toTopOf="@+id/fixed_layout" />
+                    app:layout_constraintTop_toTopOf="@+id/fixed_layout"
+                    tools:ignore="HardcodedText" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -78,51 +80,56 @@
                     android:id="@+id/filtroData"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
                     android:layout_marginLeft="32dp"
                     android:clickable="true"
-                    android:drawableEnd="@drawable/ic_seta_up_down"
-                    android:drawableRight="@drawable/ic_seta_up_down"
                     android:drawablePadding="10dp"
-                    android:drawableTint="@color/orange"
                     android:focusable="true"
                     android:text="Data"
                     android:textColor="@color/orange"
                     android:textSize="18sp"
+                    app:drawableEndCompat="@drawable/ic_seta_up_down"
+                    app:drawableRightCompat="@drawable/ic_seta_up_down"
+                    app:drawableTint="@color/orange"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/filtroStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
-                    android:drawableEnd="@drawable/ic_status_padrao"
-                    android:drawableRight="@drawable/ic_status_padrao"
                     android:drawablePadding="10dp"
                     android:focusable="true"
                     android:text="Status"
                     android:textColor="@color/orange"
                     android:textSize="18sp"
+                    app:drawableEndCompat="@drawable/ic_status_padrao"
+                    app:drawableRightCompat="@drawable/ic_status_padrao"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/filtroOrdem"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="32dp"
                     android:layout_marginRight="32dp"
                     android:clickable="true"
-                    android:drawableEnd="@drawable/ic_seta_up_down"
-                    android:drawableRight="@drawable/ic_seta_up_down"
                     android:drawablePadding="10dp"
-                    android:drawableTint="@color/orange"
                     android:focusable="true"
                     android:text="Ordem"
                     android:textColor="@color/orange"
                     android:textSize="18sp"
+                    app:drawableEndCompat="@drawable/ic_seta_up_down"
+                    app:drawableRightCompat="@drawable/ic_seta_up_down"
+                    app:drawableTint="@color/orange"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="HardcodedText" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -132,6 +139,6 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/base_cardview"
-        android:paddingBottom="?attr/actionBarSize"/>
+        android:paddingBottom="?attr/actionBarSize"
+        app:layout_constraintTop_toBottomOf="@id/base_cardview" />
 </androidx.constraintlayout.widget.ConstraintLayout>

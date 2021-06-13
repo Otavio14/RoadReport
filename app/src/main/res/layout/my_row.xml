@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -48,7 +49,8 @@
                     android:textColor="@color/orange"
                     android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="HardcodedText" />
 
                 <Spinner
                     android:id="@+id/spinnerStatus"
@@ -69,7 +71,8 @@
                     android:visibility="gone"
                     app:backgroundTint="@color/orange"
                     app:layout_constraintStart_toStartOf="@id/spinnerStatus"
-                    app:layout_constraintTop_toBottomOf="@id/spinnerStatus" />
+                    app:layout_constraintTop_toBottomOf="@id/spinnerStatus"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/textVerNoMapa"
@@ -79,16 +82,18 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
                     android:clickable="true"
-                    android:drawableEnd="@drawable/ic_marker"
-                    android:drawableRight="@drawable/ic_marker"
+                    android:focusable="true"
                     android:gravity="center"
                     android:text="Mapa"
                     android:textColor="@color/orange"
                     android:textSize="18sp"
                     app:backgroundTint="@color/orange"
+                    app:drawableEndCompat="@drawable/ic_marker"
+                    app:drawableRightCompat="@drawable/ic_marker"
                     app:drawableTint="@color/orange"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="HardcodedText" />
 
                 <!--This is ImageButton for the expansion icon.-->
                 <Button
@@ -124,10 +129,10 @@
                 <ImageView
                     android:id="@+id/textFotoAntes"
                     android:layout_width="0dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
                     android:layout_height="150dp"
+                    android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginRight="8dp"
                     android:background="@drawable/styles2"
                     android:gravity="center"
                     android:maxWidth="180dp"
@@ -135,14 +140,16 @@
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textDataInicioValor"
-                    app:srcCompat="@drawable/ic_photo" />
+                    app:srcCompat="@drawable/ic_photo"
+                    tools:ignore="ContentDescription" />
 
                 <ImageView
                     android:id="@+id/textFotoDepois"
-                    android:layout_marginRight="8dp"
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:background="@drawable/styles2"
                     android:gravity="center"
                     android:maxWidth="180dp"
@@ -150,7 +157,8 @@
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/textFotoAntes"
                     app:layout_constraintTop_toBottomOf="@+id/textDataFimValor"
-                    app:srcCompat="@drawable/ic_photo" />
+                    app:srcCompat="@drawable/ic_photo"
+                    tools:ignore="ContentDescription" />
 
                 <TextView
                     android:id="@+id/textDataInicioValor"
@@ -161,7 +169,8 @@
                     android:textColor="@color/orange"
                     app:layout_constraintEnd_toEndOf="@+id/textFotoAntes"
                     app:layout_constraintStart_toStartOf="@+id/textFotoAntes"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/textDataFimValor"
@@ -172,25 +181,28 @@
                     android:textColor="@color/orange"
                     app:layout_constraintEnd_toEndOf="@+id/textFotoDepois"
                     app:layout_constraintStart_toStartOf="@+id/textFotoDepois"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="HardcodedText" />
 
                 <EditText
                     android:id="@+id/textDescricao"
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_marginTop="4dp"
+                    android:autofillHints=""
                     android:background="@drawable/styles2"
                     android:ems="10"
                     android:gravity="center"
+                    android:hint="Descrição"
                     android:inputType="textMultiLine|none"
                     android:longClickable="false"
-                    android:textIsSelectable="true"
-                    android:text="Descrição"
                     android:textColor="@color/orange"
+                    android:textIsSelectable="true"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="@+id/textFotoDepois"
                     app:layout_constraintStart_toStartOf="@+id/textFotoAntes"
-                    app:layout_constraintTop_toBottomOf="@+id/textFotoAntes" />
+                    app:layout_constraintTop_toBottomOf="@+id/textFotoAntes"
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/textResponsavel"
@@ -202,7 +214,8 @@
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="@+id/textDescricao"
                     app:layout_constraintStart_toStartOf="@+id/textDescricao"
-                    app:layout_constraintTop_toBottomOf="@+id/textDescricao" />
+                    app:layout_constraintTop_toBottomOf="@+id/textDescricao"
+                    tools:ignore="HardcodedText" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,8 +18,8 @@
         android:layout_marginLeft="24dp"
         android:layout_marginRight="24dp"
         android:layout_marginBottom="24dp"
-        android:backgroundTint="@color/white"
         android:visibility="gone"
+        android:backgroundTint="@color/white"
         app:cardCornerRadius="24dp"
         app:layout_constraintBottom_toTopOf="@+id/textMapaOcorrencias"
         app:layout_constraintEnd_toEndOf="parent"
@@ -32,19 +33,22 @@
                 android:id="@+id/textCardBairro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
                 android:layout_marginLeft="24dp"
                 android:layout_marginTop="24dp"
                 android:text="Nome Bairro"
                 android:textColor="@color/gray"
                 android:textSize="20sp"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="HardcodedText" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fabCardFechar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
+                android:layout_marginEnd="24dp"
                 android:layout_marginRight="24dp"
                 android:layout_marginBottom="24dp"
                 app:backgroundTint="@color/orange"
@@ -53,50 +57,58 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:maxImageSize="40dp"
                 app:srcCompat="@drawable/ic_menu_aberto"
-                app:tint="@color/white" />
+                app:tint="@color/white"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:id="@+id/textCardStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
                 android:layout_marginLeft="24dp"
                 android:text="Status: Em espera"
                 android:textColor="@color/gray"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/textCardDataInicio"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textCardBairro" />
+                app:layout_constraintTop_toBottomOf="@+id/textCardBairro"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/textCardDataInicio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
                 android:layout_marginLeft="24dp"
-                android:textColor="@color/gray"
                 android:text="Data Início"
+                android:textColor="@color/gray"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/textCardDataFim"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textCardStatus" />
+                app:layout_constraintTop_toBottomOf="@+id/textCardStatus"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/textCardDataFim"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
                 android:layout_marginLeft="24dp"
+                android:layout_marginBottom="24dp"
                 android:text="Data Fim"
                 android:textColor="@color/gray"
                 android:textSize="16sp"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="24dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textCardDataInicio" />
+                app:layout_constraintTop_toBottomOf="@+id/textCardDataInicio"
+                tools:ignore="HardcodedText" />
 
             <Button
                 android:id="@+id/buttonCardVerMais"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
                 android:layout_marginRight="24dp"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/rounded_borders"
@@ -104,7 +116,8 @@
                 app:backgroundTint="@color/orange"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fabCardFechar" />
+                app:layout_constraintTop_toBottomOf="@+id/fabCardFechar"
+                tools:ignore="HardcodedText" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
@@ -122,7 +135,8 @@
         android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="HardcodedText" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/menu_fechado"
@@ -132,12 +146,14 @@
         android:layout_marginRight="24dp"
         android:layout_marginBottom="24dp"
         android:clickable="true"
+        android:focusable="true"
         app:backgroundTint="@color/orange"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="40dp"
         app:srcCompat="@drawable/ic_menu_fechado"
-        app:tint="@color/white" />
+        app:tint="@color/white"
+        tools:ignore="ContentDescription" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/sair"
@@ -145,6 +161,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:clickable="true"
+        android:focusable="true"
         android:text="Sair"
         android:textColor="@color/white"
         android:visibility="invisible"
@@ -152,7 +169,8 @@
         app:icon="@drawable/ic_logout"
         app:iconTint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/menu_fechado"
-        app:layout_constraintEnd_toEndOf="@+id/menu_fechado" />
+        app:layout_constraintEnd_toEndOf="@+id/menu_fechado"
+        tools:ignore="HardcodedText" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/ver_ocorrencias"
@@ -162,6 +180,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
         android:clickable="true"
+        android:focusable="true"
         android:text="Ver Ocorrências"
         android:textColor="@color/white"
         android:visibility="invisible"
@@ -169,7 +188,8 @@
         app:icon="@drawable/ic_relatorio"
         app:iconTint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/sair"
-        app:layout_constraintEnd_toEndOf="@+id/sair" />
+        app:layout_constraintEnd_toEndOf="@+id/sair"
+        tools:ignore="HardcodedText" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/relatar_ocorrencia"
@@ -179,6 +199,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
         android:clickable="true"
+        android:focusable="true"
         android:text="Relatar Ocorrência"
         android:textColor="@color/white"
         android:visibility="invisible"
@@ -186,7 +207,8 @@
         app:icon="@drawable/ic_relatar"
         app:iconTint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/ver_ocorrencias"
-        app:layout_constraintEnd_toEndOf="@+id/ver_ocorrencias" />
+        app:layout_constraintEnd_toEndOf="@+id/ver_ocorrencias"
+        tools:ignore="HardcodedText" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/nome_usuario"
@@ -203,7 +225,8 @@
         app:icon="@drawable/ic_usuario"
         app:iconTint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/relatar_ocorrencia"
-        app:layout_constraintEnd_toEndOf="@+id/relatar_ocorrencia" />
+        app:layout_constraintEnd_toEndOf="@+id/relatar_ocorrencia"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/textLocalizacao"
@@ -211,16 +234,19 @@
         android:layout_height="60dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/rounded_borders"
-        android:drawableStart="@drawable/ic_marker"
-        android:drawableLeft="@drawable/ic_marker"
         android:drawablePadding="10dp"
         android:gravity="center_vertical"
         android:padding="10dp"
         android:text="Av. Eng. Fábio Barnabé\nIndaiatuba - SP"
         android:textColor="@color/white"
         android:textSize="15sp"
+        android:drawableLeft="@drawable/ic_marker"
+        app:drawableLeftCompat="@drawable/ic_marker"
+        app:drawableStartCompat="@drawable/ic_marker"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText"
+        android:drawableStart="@drawable/ic_marker" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
