@@ -61,7 +61,7 @@ public class OcorrenciasActivity extends AppCompatActivity {
     ArrayList<String> dataInicio = new ArrayList<>();
     ArrayList<String> dataFim = new ArrayList<>();
     ArrayList<String> fotoAntes = new ArrayList<>();
-    ArrayList<StorageReference> fotoDepois = new ArrayList<>();
+    ArrayList<String> fotoDepois = new ArrayList<>();
     ArrayList<String> descricao = new ArrayList<>();
     ArrayList<String> nomeResponsavel = new ArrayList<>();
     ArrayList<String> expandirPosicao = new ArrayList<>();
@@ -315,6 +315,11 @@ public class OcorrenciasActivity extends AppCompatActivity {
                             fotoAntes.add(String.valueOf(uri));
                             myAdapter.notifyDataSetChanged();
                         });
+                        pathReference = storageRef.child(document.getId() + "/" + document.getId() + "_depois.jpg");
+                        pathReference.getDownloadUrl().addOnSuccessListener(uri2 -> {
+                            fotoDepois.add(String.valueOf(uri2));
+                            myAdapter.notifyDataSetChanged();
+                        });
                     }
                 }
                 myAdapter.notifyDataSetChanged();
@@ -361,6 +366,11 @@ public class OcorrenciasActivity extends AppCompatActivity {
                             pathReference = storageRef.child(document.getId() + "/" + document.getId() + "_antes.jpg");
                             pathReference.getDownloadUrl().addOnSuccessListener(uri -> {
                                 fotoAntes.add(String.valueOf(uri));
+                                myAdapter.notifyDataSetChanged();
+                            });
+                            pathReference = storageRef.child(document.getId() + "/" + document.getId() + "_depois.jpg");
+                            pathReference.getDownloadUrl().addOnSuccessListener(uri2 -> {
+                                fotoDepois.add(String.valueOf(uri2));
                                 myAdapter.notifyDataSetChanged();
                             });
                         }

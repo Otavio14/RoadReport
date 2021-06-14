@@ -40,7 +40,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     ArrayList<String> dataInicio;
     ArrayList<String> dataFim;
     ArrayList<String> fotoAntes;
-    ArrayList<StorageReference> fotoDepois;
+    ArrayList<String> fotoDepois;
     ArrayList<String> descricao;
     ArrayList<String> nomeResponsavel;
     ArrayList<String> idOcorrencia;
@@ -53,7 +53,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public MyAdapter(Context ct, ArrayList<String> p_nomeBairro,
                      ArrayList<String> p_textStatus, ArrayList<Integer> p_iconeStatus, ArrayList<String> p_dataInicio,
                      ArrayList<String> p_dataFim, ArrayList<String> p_fotoAntes,
-                     ArrayList<StorageReference> p_fotoDepois, ArrayList<String> p_descricao,
+                     ArrayList<String> p_fotoDepois, ArrayList<String> p_descricao,
                      ArrayList<String> p_nomeResponsavel, ArrayList<String> p_idOcorrencia, ArrayList<Boolean> p_ocorrenciaUsuario,
                      boolean p_admin, ArrayList<Boolean> p_ocorrenciaAvaliada, ArrayList<String> p_expandirPosicao) {
         context = ct;
@@ -106,6 +106,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         if (position < fotoAntes.size()) {
             Glide.with(context).load(fotoAntes.get(position)).into(holder.fotoAntes);
+        }
+
+        if (position < fotoDepois.size()) {
+            Glide.with(context).load(fotoDepois.get(position)).into(holder.fotoDepois);
         }
 
         holder.spinnerStatus.setOnItemSelectedListener(null);
