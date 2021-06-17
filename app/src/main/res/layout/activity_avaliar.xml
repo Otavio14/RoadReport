@@ -95,7 +95,7 @@
         android:id="@+id/editAvaliarDescricao"
         android:layout_width="300dp"
         android:layout_height="150dp"
-        android:autofillHints=""
+        android:autofillHints="true"
         android:background="@drawable/styles2"
         android:ems="10"
         android:gravity="start|top"
