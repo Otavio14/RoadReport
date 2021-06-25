@@ -243,7 +243,7 @@ public class OcorrenciasActivity extends AppCompatActivity {
                         case 0:
                             //Mudança de estado inicial para crescente
                             queryOutros = database.collection("registro").orderBy("bairro", Query.Direction.ASCENDING);
-                            queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).orderBy("bairro", Query.Direction.ASCENDING);
+                            queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).orderBy("bairro", Query.Direction.DESCENDING);
                             registrosUsuario();
                             registrosGeral(admin, idUsuario);
                             estadoFiltroOrdem = 1;
@@ -256,7 +256,7 @@ public class OcorrenciasActivity extends AppCompatActivity {
                         case 1:
                             //Mudança de estado crescente para decrescente
                             queryOutros = database.collection("registro").orderBy("bairro", Query.Direction.DESCENDING);
-                            queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).orderBy("bairro", Query.Direction.DESCENDING);
+                            queryUsuario = database.collection("registro").whereEqualTo("codUsuario", idUsuario).orderBy("bairro", Query.Direction.ASCENDING);
                             registrosUsuario();
                             registrosGeral(admin, idUsuario);
                             estadoFiltroOrdem = 2;
@@ -287,7 +287,7 @@ public class OcorrenciasActivity extends AppCompatActivity {
 
     private void focarPosicao() {
         if (getIntent().getStringExtra("ID_OCORRENCIA") != null && idOcorrencia.contains(getIntent().getStringExtra("ID_OCORRENCIA"))) {
-            recyclerView.smoothScrollToPosition(idOcorrencia.indexOf(getIntent().getStringExtra("ID_OCORRENCIA")));
+            recyclerView.scrollToPosition(idOcorrencia.indexOf(getIntent().getStringExtra("ID_OCORRENCIA")));
         }
     }
 
@@ -316,8 +316,11 @@ public class OcorrenciasActivity extends AppCompatActivity {
                             myAdapter.notifyDataSetChanged();
                         });
                         pathReference = storageRef.child(document.getId() + "/" + document.getId() + "_depois.jpg");
-                        pathReference.getDownloadUrl().addOnSuccessListener(uri2 -> {
-                            fotoDepois.add(String.valueOf(uri2));
+                        pathReference.getDownloadUrl().addOnSuccessListener(uri1 -> {
+                            fotoDepois.add(String.valueOf(uri1));
+                            myAdapter.notifyDataSetChanged();
+                        }).addOnFailureListener(uri2 -> {
+                            fotoDepois.add(null);
                             myAdapter.notifyDataSetChanged();
                         });
                     }
@@ -369,8 +372,11 @@ public class OcorrenciasActivity extends AppCompatActivity {
                                 myAdapter.notifyDataSetChanged();
                             });
                             pathReference = storageRef.child(document.getId() + "/" + document.getId() + "_depois.jpg");
-                            pathReference.getDownloadUrl().addOnSuccessListener(uri2 -> {
-                                fotoDepois.add(String.valueOf(uri2));
+                            pathReference.getDownloadUrl().addOnSuccessListener(uri1 -> {
+                                fotoDepois.add(String.valueOf(uri1));
+                                myAdapter.notifyDataSetChanged();
+                            }).addOnFailureListener(uri2 -> {
+                                fotoDepois.add(null);
                                 myAdapter.notifyDataSetChanged();
                             });
                         }

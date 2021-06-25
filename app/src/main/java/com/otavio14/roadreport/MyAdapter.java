@@ -85,6 +85,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        holder.descricao.setVisibility(View.GONE);
         holder.nomeBairro.setText(nomeBairro.get(position));
         holder.dataInicioValor.setText(dataInicio.get(position));
         if (dataFim.get(position) != null) {
@@ -101,7 +102,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         if (nomeResponsavel.get(position) != null) {
             holder.nomeResponsavel.setText(nomeResponsavel.get(position));
         } else {
-            holder.nomeResponsavel.setText("Nome do Responsável");
+            holder.nomeResponsavel.setVisibility(View.GONE);
         }
 
         if (position < fotoAntes.size()) {
@@ -109,7 +110,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
 
         if (position < fotoDepois.size()) {
-            Glide.with(context).load(fotoDepois.get(position)).into(holder.fotoDepois);
+            if (fotoDepois != null) {
+                Glide.with(context).load(fotoDepois.get(position)).into(holder.fotoDepois);
+            } else {
+                Glide.with(context).load(R.drawable.ic_photo).into(holder.fotoDepois);
+            }
         }
 
         holder.spinnerStatus.setOnItemSelectedListener(null);
@@ -139,12 +144,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         if (admin) {
             holder.spinnerStatus.setEnabled(true);
             holder.descricao.setVisibility(View.VISIBLE);
-            holder.nomeResponsavel.setVisibility(View.VISIBLE);
+            if (textoStatus.equals("Concluido")) {
+                holder.nomeResponsavel.setVisibility(View.VISIBLE);
+            }
         }
 
         if (ocorrenciaUsuario.get(position)) {
             holder.descricao.setVisibility(View.VISIBLE);
-            holder.nomeResponsavel.setVisibility(View.VISIBLE);
+            if (textoStatus.equals("Concluido")) {
+                holder.nomeResponsavel.setVisibility(View.VISIBLE);
+            }
         }
 
         holder.spinnerStatus.post(() -> holder.spinnerStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -158,7 +167,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
                             builder.setTitle("Confirmar invalidação");
                             builder.setMessage("Deseja invalidar a ocorrência para uma futura avaliação?");
                             builder.setPositiveButton("Sim",
-                                    (dialog, which) -> database.collection("registro").document(idOcorrencia.get(position)).update("validacao", false));
+                                    (dialog, which) -> {
+                                        database.collection("registro").document(idOcorrencia.get(position)).update("validacao", false);
+                                        notifyItemRemoved(position);
+                                    });
                             builder.setNegativeButton("Não", (dialog, which) -> notifyDataSetChanged());
                             AlertDialog dialog = builder.create();
                             dialog.show();

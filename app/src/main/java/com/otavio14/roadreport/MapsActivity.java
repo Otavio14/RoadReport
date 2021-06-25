@@ -289,6 +289,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             if (document.getString("dataFim") != null) {
                                 textCardDataFim.setText(document.getString("dataFim"));
                                 textCardDataFim.setVisibility(View.VISIBLE);
+                            } else {
+                                textCardDataFim.setVisibility(View.GONE);
                             }
                         } else {
                             Log.d("erro", "Error getting documents.", task.getException());
